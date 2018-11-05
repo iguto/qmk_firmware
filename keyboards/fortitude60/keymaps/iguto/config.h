@@ -38,4 +38,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 //#define DEBUG_ACTION
+#define TAPPING_TERM 200
 
