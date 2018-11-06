@@ -19,7 +19,7 @@ extern keymap_config_t keymap_config;
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
-  COLEMAK,
+  EUCALYN,
   DVORAK,
   LOWER,
   RAISE,
@@ -66,11 +66,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,-----------------------------------------.             ,-----------------------------------------.
  * |   `  |   1  |   2  |   3  |   4  |   5  |             |   6  |   7  |   8  |   9  |   0  | Del  |
  * |------+------+------+------+------+------|             |------+------+------+------+------+------|
- * | Tab  |   Q  |   W  |   F  |   P  |   G  |             |   J  |   L  |   U  |   Y  |   ;  | Bksp |
+ * | Tab  |   Q  |   W  |   ,  |   .  |   M  |             |   R  |   D  |   Y  |   P  |   ;  | Bksp |
  * |------+------+------+------+------+------|             |------+------+------+------+------+------|
- * | Esc  |   A  |   R  |   S  |   T  |   D  |             |   H  |   N  |   E  |   I  |   O  |  "   |
+ * | Esc  |   A  |   O  |   E  |   I  |   U  |             |   G  |   T  |   K  |   S  |   N  |  "   |
  * |------+------+------+------+------+------+-------------+------+------+------+------+------+------|
- * | Shift|   Z  |   X  |   C  |   V  |   B  |   [  |   ]  |   K  |   M  |   ,  |   .  |   /  |Enter |
+ * | Shift|   Z  |   X  |   C  |   V  |   F  |   [  |   ]  |   B  |   H  |   J  |   L  |   /  |Enter |
  * `-------------+------+------+------+------+------+------+------+------+------+------+-------------'
  *               |  GUI | Ctrl |Lower |Space | Ctrl |Enter |Space |Raise |  Alt | GUI |
  *               `---------------------------------------------------------------------'
@@ -225,7 +225,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_ADJUST] =  LAYOUT( \
   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12, \
   _______, RESET  , RGB_TOG, RGB_MOD, RGB_HUD, RGB_HUI,                   RGB_SAD, RGB_SAI, RGB_VAD, RGB_VAI, _______, KC_BSPC, \
-  _______, _______, DEBUG, AU_ON,   AU_OFF,  AG_NORM,                   AG_SWAP, _______, BL_TOGG, BL_STEP, _______, _______, \
+  _______, _______, DEBUG, RGB_RMOD,   AU_OFF,  AG_NORM,                   AG_SWAP, _______, BL_TOGG, BL_STEP, _______, _______, \
   QWERTY,  COLEMAK, DVORAK,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
                     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______\
 )
@@ -234,6 +234,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 
 uint32_t layer_state_set_user(uint32_t state) {
+  switch (biton32(state)) {
+    case _OVERWATCH:
+      rgblight_enable();
+      rgblight_mode(1);
+      rgblight_sethsv(110, 255, 255);
+      break;
+    default:
+      rgblight_disable();
+  }
+
   return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
 }
 
@@ -260,5 +270,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
-
 
