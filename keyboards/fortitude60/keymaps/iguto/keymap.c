@@ -8,13 +8,14 @@ extern keymap_config_t keymap_config;
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 #define _QWERTY 0
-#define _COLEMAK 1
+#define _EUCALYN 1
 #define _DVORAK 2
-#define _LOWER 3
-#define _RAISE 4
-#define _MISC  5
-#define _EMACS 6
-#define _OVERWATCH 7
+#define _OVERWATCH 3
+#define _BF 4
+#define _LOWER 10
+#define _RAISE 11
+#define _MISC  12
+#define _EMACS 13
 #define _ADJUST 16
 
 enum custom_keycodes {
@@ -38,6 +39,9 @@ enum custom_keycodes {
 #define LC LCTL
 #define LW_IMON LT(_LOWER, KC_F23)
 #define RS_IMOF LT(_RAISE, KC_F24)
+#define TG_OW TG(_OVERWATCH)
+#define TG_BF TG(_BF)
+#define ALT_TAB LALT(KC_TAB)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -55,11 +59,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *               `---------------------------------------------------------------------'
  */
 [_QWERTY] = LAYOUT( \
-  KC_GRV,     KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_ESC, \
-  KC_TAB,     KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                   KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
-  KC_LCTL,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                   KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, \
-  KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B, KC_LBRC, TG(_OVERWATCH),  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MISC, \
-                 KC_LGUI, KC_LALT,  LW_IMON,  KC_SPC, KC_LCTL,  KC_ENT, LTE_SP, RS_IMOF,   KC_RALT, KC_RGUI\
+  KC_GRV,    KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                     KC_6,   KC_7,      KC_8,    KC_9,    KC_0,    KC_ESC, \
+  KC_TAB,    KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,    KC_BSPC, \
+  KC_LCTL,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,   KC_J,      KC_K,    KC_L,    KC_SCLN, KC_ENT, \
+  KC_LSFT,   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  KC_LBRC,  TG_OW,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH, MISC, \
+                  KC_LGUI, KC_LALT,  LW_IMON,  KC_SPC, KC_ENT,   KC_LCTL, LTE_SP, RS_IMOF,   KC_RALT, KC_RGUI\
 ),
 
 /* Colemak
@@ -75,7 +79,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *               |  GUI | Ctrl |Lower |Space | Ctrl |Enter |Space |Raise |  Alt | GUI |
  *               `---------------------------------------------------------------------'
  */
-[_COLEMAK] = LAYOUT( \
+[_EUCALYN] = LAYOUT( \
   KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
   KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                   KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC, \
   KC_ESC,  KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                   KC_H,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT, \
@@ -139,11 +143,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *               `---------------------------------------------------------------------'
  */
 [_RAISE] = LAYOUT( \
-  KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, _______, \
-  KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL, \
-  KC_DEL,  KC_LEFT, KC_DOWN, KC_RGHT, KC_F4,   KC_F5,                      KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS, \
-  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  _______, _______,  KC_F12,  KC_QUOT, KC_NUBS, _______, _______, _______, \
-                    _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______\
+  KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                           KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, _______, \
+  KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                           KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL, \
+  KC_DEL,  KC_LEFT, KC_DOWN, KC_RGHT, KC_F4,   KC_F5,                             KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS, \
+  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  _______, TG_BF,  KC_F12,  KC_QUOT, KC_NUBS, _______, _______, _______, \
+                    _______, _______, _______, _______, _______, _______,         _______, _______, _______, _______\
 ),
 
 /* Misc
@@ -198,15 +202,36 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------+-------------+------+------+------+------+------+------|
  * |      |      |      |      |      |      |   h  |      |      |      |      |      |      |      |
  * `-------------+------+------+------+------+------+------+------+------+------+------+-------------'
- *               |      |      |      | SPC  |      |      |      |      |      |      |
+ *               |      |      |      | SPC  |IME ON|      |      |      |      |      |
  *               `---------------------------------------------------------------------'
  */
 [_OVERWATCH] = LAYOUT( \
-  _______, _______, _______, _______, _______, KC_ESC,                    _______, _______, _______, _______, _______, _______,  \
+  _______, _______, _______, _______, _______, KC_ESC,                     _______, _______, _______, _______, _______, _______,  \
   _______, _______, _______, _______, _______, _______,                    _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______,                    _______, _______, _______, _______, _______, _______, \
-  _______, _______, _______, _______, _______, _______, KC_H,   _______,  _______, _______, _______, _______, _______, _______, \
-                    _______, _______, KC_SPC, _______, _______, _______,  _______, _______, _______, _______\
+  _______, _______, _______, _______, _______, _______, KC_H,    _______,  _______, _______, _______, _______, _______, _______, \
+                    KC_F23 , KC_EQL , KC_SPC,  _______, ALT_TAB, _______,  _______, _______, _______, _______\
+),
+
+/* BF
+ * ,-----------------------------------------.             ,-----------------------------------------.
+ * |XXXXXX|   1  |   2  |   3  |   4  |   5  |             |   6  |   7  |   8  |   9  |   0  | Esc  |
+ * |------+------+------+------+------+------|             |------+------+------+------+------+------|
+ * | Tab  |   Q  |   W  |   E  |   R  |   T  |             |   Y  |   U  |   I  |   O  |   P  | Bksp |
+ * |------+------+------+------+------+------|             |------+------+------+------+------+------|
+ * | Shift|   A  |   S  |   D  |   F  |   G  |             |   H  |   J  |   K  |   L  |   ;  |Enter |
+ * |------+------+------+------+------+------+-------------+------+------+------+------+------+------|
+ * | Shift|   Z  |   X  |   C  |   V  |   B  |   [  |RShift|   N  |   M  |   ,  |   .  |   /  |Ctrl  |
+ * `-------------+------+------+------+------+------+------+------+------+------+------+-------------'
+ *               |  GUI | Ctrl |Lower |Space | Ctrl |Enter|Ema,SP|Raise |  Alt |  GUI |
+ *               `---------------------------------------------------------------------'
+ */
+[_BF] = LAYOUT( \
+  KC_NO,     KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                    KC_6,   KC_7,      KC_8,    KC_9,    KC_0,    KC_ESC, \
+  KC_TAB,    KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                    KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,    KC_BSPC, \
+  KC_LCTL,   _______, _______, _______, _______, _______,                    KC_H,   KC_J,      KC_K,    KC_L,    KC_SCLN, KC_ENT, \
+  KC_LSFT,   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  KC_LBRC,  TG_BF,  KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH, MISC, \
+                  KC_LGUI, KC_LALT,  LW_IMON,  KC_SPC, KC_F12,  KC_ENT, LTE_SP, RS_IMOF,   KC_RALT, KC_RGUI\
 ),
 
 /* Adjust (Lower + Raise)
@@ -226,7 +251,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12, \
   _______, RESET  , RGB_TOG, RGB_MOD, RGB_HUD, RGB_HUI,                   RGB_SAD, RGB_SAI, RGB_VAD, RGB_VAI, _______, KC_BSPC, \
   _______, _______, DEBUG, RGB_RMOD,   AU_OFF,  AG_NORM,                   AG_SWAP, _______, BL_TOGG, BL_STEP, _______, _______, \
-  QWERTY,  COLEMAK, DVORAK,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
+  QWERTY,  EUCALYN, DVORAK,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
                     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______\
 )
 
@@ -238,7 +263,12 @@ uint32_t layer_state_set_user(uint32_t state) {
     case _OVERWATCH:
       rgblight_enable();
       rgblight_mode(1);
-      rgblight_sethsv(110, 255, 255);
+      rgblight_sethsv(110, 255, 120);
+      break;
+    case _BF:
+      rgblight_enable();
+      rgblight_mode(1);
+      rgblight_sethsv(170, 255, 255);
       break;
     default:
       rgblight_disable();
@@ -255,9 +285,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       return false;
       break;
-    case COLEMAK:
+    case EUCALYN:
       if (record->event.pressed) {
-        set_single_persistent_default_layer(_COLEMAK);
+        set_single_persistent_default_layer(_EUCALYN);
       }
       return false;
       break;
