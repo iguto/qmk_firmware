@@ -17,6 +17,7 @@ extern keymap_config_t keymap_config;
 #define _MISC  12
 #define _EMACS 13
 #define _ADJUST 16
+#define _MOUSE 17
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
@@ -26,6 +27,7 @@ enum custom_keycodes {
   RAISE,
   OVERWATCH,
   ADJUST,
+  MOUSE
 };
 
 // Fillers to make layering more clear
@@ -253,8 +255,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, _______, DEBUG, RGB_RMOD,   AU_OFF,  AG_NORM,                   AG_SWAP, _______, BL_TOGG, BL_STEP, _______, _______, \
   QWERTY,  EUCALYN, DVORAK,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
                     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______\
-)
+),
 
+/* Adjust (Lower + Raise)
+ * ,-----------------------------------------.             ,-----------------------------------------.
+ * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |             |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
+ * |------+------+------+------+------+------.             ,------+------+------+------+------+------|
+ * |      | Reset|RGB Tg|RGB Md|Hue Up|Hue Dn|             |Sat Up|Sat Dn|Val Up|Val Dn|      | Bksp |
+ * |------+------+------+------+------+------.             ,------+------+------+------+------+------|
+ * |      |      | DEBUG|Aud on|Audoff|AGnorm|             |AGswap|      |BL TOG|BL STP|      |      |
+ * |------+------+------+------+------+------+-------------+------+------+------+------+------+------|
+ * |Qwerty|Colemk|Dvorak|      |      |      |      |      |      |      |      |      |      |      |
+ * `-------------+------+------+------+------+------+------+------+------+------+------+-------------'
+ *               |      |      |      |      |      |      |      |      |      |      |
+ *               `---------------------------------------------------------------------'
+ */
+[_MOUSE] =  LAYOUT( \
+  _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______,                   _______, _______, KC_BTN1, KC_MS_U, KC_BTN2, _______, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_BTN1, KC_MS_L, KC_MS_D, KC_MS_R, _______, \
+                    _______, _______, _______, _______, _______, _______, _______, _______, _______, _______\
+)
 
 };
 
@@ -274,7 +296,9 @@ uint32_t layer_state_set_user(uint32_t state) {
       rgblight_disable();
   }
 
-  return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+  state = update_tri_layer_state(state, _RAISE, _MISC, _MOUSE);
+  state = update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+  return state;
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
