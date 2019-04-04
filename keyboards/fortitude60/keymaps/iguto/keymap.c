@@ -12,6 +12,7 @@ extern keymap_config_t keymap_config;
 #define _DVORAK 2
 #define _OVERWATCH 3
 #define _BF 4
+#define _MHW 5
 #define _LOWER 10
 #define _RAISE 11
 #define _MISC  12
@@ -43,6 +44,7 @@ enum custom_keycodes {
 #define RS_IMOF LT(_RAISE, KC_F24)
 #define TG_OW TG(_OVERWATCH)
 #define TG_BF TG(_BF)
+#define TG_MHW TG(_MHW)
 #define ALT_TAB LALT(KC_TAB)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -169,7 +171,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, _______, _______, _______, _______, _______,                    _______, _______, _______, _______, _______, _______,  \
   _______, _______, _______, _______, _______, _______,                    _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______,                    _______, KC_PGDN, KC_PGUP, KC_UP  , _______, _______, \
-  _______, _______, _______, _______, _______, _______, _______, _______,  _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, \
+  _______, _______, _______, _______, _______, _______, _______, TG_MHW ,  _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, \
                     _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______\
 ),
 
@@ -208,11 +210,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *               `---------------------------------------------------------------------'
  */
 [_OVERWATCH] = LAYOUT( \
-  _______, _______, _______, _______, _______, KC_ESC,                     _______, _______, _______, _______, _______, _______,  \
+  XXXXXXX, _______, _______, _______, _______, KC_ESC,                     _______, _______, _______, _______, _______, _______,  \
   _______, _______, _______, _______, _______, _______,                    _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______,                    _______, _______, _______, _______, _______, _______, \
   _______, _______, _______, _______, _______, _______, KC_H,    _______,  _______, _______, _______, _______, _______, _______, \
-                    KC_F23 , KC_EQL , KC_SPC,  _______, ALT_TAB, _______,  _______, _______, _______, _______\
+                    KC_F23 , XXXXXXX, KC_SPC,  _______, KC_NO, _______,  _______, _______, _______, _______\
 ),
 
 /* BF
@@ -231,11 +233,31 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_BF] = LAYOUT( \
   KC_NO,     KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                    KC_6,   KC_7,      KC_8,    KC_9,    KC_0,    KC_ESC, \
   KC_TAB,    KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                    KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,    KC_BSPC, \
-  KC_LCTL,   _______, _______, _______, _______, _______,                    KC_H,   KC_J,      KC_K,    KC_L,    KC_SCLN, KC_ENT, \
+  KC_LCTL,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                    KC_H,   KC_J,      KC_K,    KC_L,    KC_SCLN, KC_ENT, \
   KC_LSFT,   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  KC_LBRC,  TG_BF,  KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH, MISC, \
                   KC_LGUI, KC_LALT,  LW_IMON,  KC_SPC, KC_F12,  KC_ENT, LTE_SP, RS_IMOF,   KC_RALT, KC_RGUI\
 ),
 
+/* MHW
+ * ,-----------------------------------------.             ,-----------------------------------------.
+ * | ~    |   1  |   2  |   3  |   4  |   5  |             |   6  |   7  |   8  |   9  |   0  | Esc  |
+ * |------+------+------+------+------+------|             |------+------+------+------+------+------|
+ * | Tab  |   Q  |   W  |   E  |   R  |   T  |             |   Y  |   U  |   I  |   O  |   P  | Bksp |
+ * |------+------+------+------+------+------|             |------+------+------+------+------+------|
+ * | Shift|   A  |   S  |   D  |   F  |   G  |             |   H  |   J  |   K  |   L  |   ;  |Enter |
+ * |------+------+------+------+------+------+-------------+------+------+------+------+------+------|
+ * | Shift|   Z  |   X  |   C  |   V  |   B  |   [  |RShift|   N  |   M  |   ,  |   .  |   /  |Ctrl  |
+ * `-------------+------+------+------+------+------+------+------+------+------+------+-------------'
+ *               |  GUI | Ctrl |Lower |Space | Ctrl |Enter|Ema,SP|Raise |  Alt |  GUI |
+ *               `---------------------------------------------------------------------'
+ */
+[_MHW] = LAYOUT( \
+  KC_NO,     KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                    KC_6,   KC_7,      KC_8,    KC_9,    KC_0,    KC_ESC, \
+  KC_TAB,    KC_Q,   KC_W,    KC_E,    KC_R,    KC_6,                    KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,    KC_BSPC, \
+  KC_LCTL,   KC_A,   KC_S,    KC_D,    KC_F,    KC_7,                    KC_H,   KC_J,      KC_K,    KC_L,    KC_SCLN, KC_ENT, \
+  KC_LSFT,   KC_Z,   KC_X,    KC_C,    KC_V,    KC_8,  KC_LBRC,  TG_MHW,  KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH, KC_NO, \
+                  KC_LGUI, KC_LALT,  LW_IMON,  KC_SPC, KC_ENT,  KC_ENT, LTE_SP, RS_IMOF,   KC_RALT, KC_RGUI\
+),
 /* Adjust (Lower + Raise)
  * ,-----------------------------------------.             ,-----------------------------------------.
  * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |             |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
@@ -252,12 +274,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_ADJUST] =  LAYOUT( \
   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12, \
   _______, RESET  , RGB_TOG, RGB_MOD, RGB_HUD, RGB_HUI,                   RGB_SAD, RGB_SAI, RGB_VAD, RGB_VAI, _______, KC_BSPC, \
-  _______, _______, DEBUG, RGB_RMOD,   AU_OFF,  AG_NORM,                   AG_SWAP, _______, BL_TOGG, BL_STEP, _______, _______, \
+  KC_CAPS, _______, DEBUG, RGB_RMOD,   AU_OFF,  AG_NORM,                   AG_SWAP, _______, BL_TOGG, BL_STEP, _______, _______, \
   QWERTY,  EUCALYN, DVORAK,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, \
                     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______\
 ),
 
-/* Adjust (Lower + Raise)
+/* MOUSE (Lower + Raise)
  * ,-----------------------------------------.             ,-----------------------------------------.
  * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |             |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |
  * |------+------+------+------+------+------.             ,------+------+------+------+------+------|
@@ -292,6 +314,11 @@ uint32_t layer_state_set_user(uint32_t state) {
       rgblight_mode(1);
       rgblight_sethsv(170, 255, 255);
       break;
+    case _MHW:
+      rgblight_enable();
+      rgblight_mode(1);
+      rgblight_sethsv(0, 100, 80);
+      break;
     default:
       rgblight_disable();
   }
@@ -314,7 +341,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         set_single_persistent_default_layer(_EUCALYN);
       }
       return false;
-      break;
+     
     case DVORAK:
       if (record->event.pressed) {
         set_single_persistent_default_layer(_DVORAK);
