@@ -28,9 +28,15 @@ enum custom_keycodes {
   RAISE,
   OVERWATCH,
   ADJUST,
-  MOUSE
+  MOUSE,
+  //TD_IMON,
+  //TD_IMOF,
 };
 
+enum TapDanceDeclearations {
+  IMON,
+  IMOF
+};
 // Fillers to make layering more clear
 #define _______ KC_TRNS
 #define XXXXXXX KC_NO
@@ -46,6 +52,19 @@ enum custom_keycodes {
 #define TG_BF TG(_BF)
 #define TG_MHW TG(_MHW)
 #define ALT_TAB LALT(KC_TAB)
+
+
+void dance_imof_finished(qk_tap_dance_state_t *state, void *user_data);
+void dance_imof_reset(qk_tap_dance_state_t *state, void *user_data);
+void dance_imon_finished(qk_tap_dance_state_t *state, void *user_data);
+void dance_imon_reset(qk_tap_dance_state_t *state, void *user_data);
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+    //[IMON] = ACTION_TAP_DANCE_DOUBLE(LOWER, KC_F23),
+    //[IMOF] = ACTION_TAP_DANCE_DOUBLE(RAISE, KC_F24)
+    [IMON] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_imon_finished, dance_imon_reset),
+    [IMOF] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_imof_finished, dance_imof_reset),
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -67,7 +86,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,    KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,    KC_BSPC, \
   KC_LCTL,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,   KC_J,      KC_K,    KC_L,    KC_SCLN, KC_ENT, \
   KC_LSFT,   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  KC_LBRC,  TG_OW,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH, MISC, \
-                  KC_LGUI, KC_LALT,  LW_IMON,  KC_SPC, KC_ENT,   KC_LCTL, LTE_SP, RS_IMOF,   KC_RALT, KC_RGUI\
+                  KC_LGUI, KC_LALT,  TD(IMOF),  KC_SPC, KC_ENT,  KC_LCTL, LTE_SP, TD(IMON),  KC_RALT, KC_RGUI\
 ),
 
 /* Colemak
@@ -350,5 +369,43 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
   }
   return true;
+}
+
+//enum {
+//  SINGLE_TAP = 1,
+//  SINGLE_HOLD = 2,
+//  DOUBLE_TAP = 3,
+//};
+
+void dance_imof_finished(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    layer_on(_LOWER);
+  } else {
+    register_code(KC_F23);
+  }
+}
+
+void dance_imof_reset(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    layer_off(_LOWER);
+  } else {
+    unregister_code(KC_F23);
+  }
+}
+
+void dance_imon_finished(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    layer_on(_RAISE);
+  } else {
+    register_code(KC_F24);
+  }
+}
+
+void dance_imon_reset(qk_tap_dance_state_t *state, void *user_data) {
+  if (state->count == 1) {
+    layer_off(_RAISE);
+  } else {
+    unregister_code(KC_F24);
+  }
 }
 
