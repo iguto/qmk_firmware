@@ -19,16 +19,40 @@ extern rgblight_config_t rgblight_config;
 extern uint8_t is_master;
 
 #define _QWERTY 0
-#define _LOWER 1
-#define _RAISE 2
-#define _ADJUST 3
+#define _LOWER 5
+#define _RAISE 10
+#define _TEN_KEY 11
+#define _MISC 15 
+#define _ADJUST 20
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
   LOWER,
   RAISE,
+  TEN_KEY,
+  MISC,
   ADJUST,
 };
+
+
+enum tap_dance_declearations {
+	IMON,
+	IMOF,
+};
+
+void dance_imon_finished(qk_tap_dance_state_t *state, void *user_data);
+void dance_imon_reset(qk_tap_dance_state_t *state, void *user_data);
+void dance_imof_finished(qk_tap_dance_state_t *state, void *user_data);
+void dance_imof_reset(qk_tap_dance_state_t *state, void *user_data);
+
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+	[IMON] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_imon_finished, dance_imon_reset),
+	[IMOF] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_imof_finished, dance_imof_reset),
+};
+
+#define MISC MO(_MISC)
+#define TEN_KEY TG(_TEN_KEY)
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -49,11 +73,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
  [_QWERTY] = LAYOUT( \
-  KC_ESC,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_GRV, \
-  KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
-  KC_LCTRL, KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, \
-  KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B, KC_LBRC,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,  KC_RSFT, \
-                             KC_LALT, KC_LGUI,LOWER, KC_SPC,   KC_ENT,   RAISE,   KC_BSPC, KC_RGUI \
+  KC_ESC,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_GRV, \
+  KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
+  KC_LCTRL, KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, \
+  KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,     TEN_KEY,  KC_RBRC,  KC_N,       KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MISC, \
+                             KC_LGUI, KC_LALT, TD(IMOF), KC_SPC,   KC_ENT,   TD(IMON),   KC_BSPC, KC_RGUI \
 ),
 /* LOWER
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -72,8 +96,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_LOWER] = LAYOUT( \
   _______, _______, _______, _______, _______, _______,                   _______, _______, _______,_______, _______, _______,\
   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12, \
-  KC_GRV, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                   KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TILD, \
-  _______, _______, _______, _______, _______, _______, _______, _______, XXXXXXX, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, \
+  KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,                    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TILD, \
+  _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, \
                              _______, _______, _______, _______, _______,  _______, _______, _______\
 ),
 /* RAISE
@@ -82,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
  * |   `  |   1  |   2  |   3  |   4  |   5  |                    |   6  |   7  |   8  |   9  |   0  |      |
  * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
- * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |-------.    ,-------|      | Left | Down |  Up  |Right |      |
+ * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |-------.    ,-------|      | Left | Down |  Up  |Right |      |
  * |------+------+------+------+------+------|   [   |    |    ]  |------+------+------+------+------+------|
  * |  F7  |  F8  |  F9  | F10  | F11  | F12  |-------|    |-------|   +  |   -  |   =  |   [  |   ]  |   \  |
  * `-----------------------------------------/       /     \      \-----------------------------------------'
@@ -93,11 +117,59 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_RAISE] = LAYOUT( \
   _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______, \
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______, \
-  KC_F1,  KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,                       _______, KC_MINS, KC_EQL, KC_LBRC, KC_RBRC,  KC_BSLS, \
+  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
+  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                       _______, KC_MINS, KC_EQL, KC_LBRC, KC_RBRC,  KC_BSLS, \
   KC_LSFT, KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,   _______, _______,  KC_MINS, KC_QUOT, KC_NUBS, _______, _______, _______,\
                              _______, _______, _______,  _______, _______,  _______, _______, _______ \
 ),
+
+
+/* TEN_KEY
+ * ,-----------------------------------------.                    ,-----------------------------------------.
+ * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |   `  |   1  |   2  |   3  |   4  |   5  |                    |   6  |   7  |   8  |   9  |   0  |      |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |-------.    ,-------|      | Left | Down |  Up  |Right |      |
+ * |------+------+------+------+------+------|   [   |    |    ]  |------+------+------+------+------+------|
+ * |  F7  |  F8  |  F9  | F10  | F11  | F12  |-------|    |-------|   +  |   -  |   =  |   [  |   ]  |   \  |
+ * `-----------------------------------------/       /     \      \-----------------------------------------'
+ *                   | LAlt | LGUI |LOWER | /Space  /       \Enter \  |RAISE |BackSP| RGUI |
+ *                   |      |      |      |/       /         \      \ |      |      |      |
+ *                   `----------------------------'           '------''--------------------'
+ */
+
+[_TEN_KEY] = LAYOUT( \
+  _______, KC_BSPC, XXXXXXX, KC_SLSH, S(KC_8), XXXXXXX,                     _______, _______, _______, _______, _______, _______, \
+  _______, KC_EQL,  KC_7,    KC_8,    KC_9,    KC_MINS,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC, \
+  _______, XXXXXXX,  KC_4,    KC_5,    KC_6,    S(KC_EQL),                   _______, KC_MINS, KC_EQL, KC_LBRC, KC_RBRC,  KC_BSLS, \
+  _______, XXXXXXX,  KC_1,    KC_2,    KC_3,    KC_0,      _______, _______, KC_MINS, KC_QUOT, KC_NUBS, _______, _______, _______,\
+                    KC_DOT, _______, _______,  KC_PENT,   _______, _______, _______, _______ \
+),
+
+/* MISC
+ * ,-----------------------------------------.                    ,-----------------------------------------.
+ * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |   `  |   1  |   2  |   3  |   4  |   5  |                    |   6  |   7  |   8  |   9  |   0  |      |
+ * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
+ * |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |-------.    ,-------|      | Left | Down |  Up  |Right |      |
+ * |------+------+------+------+------+------|   [   |    |    ]  |------+------+------+------+------+------|
+ * |  F7  |  F8  |  F9  | F10  | F11  | F12  |-------|    |-------|   +  |   -  |   =  |   [  |   ]  |   \  |
+ * `-----------------------------------------/       /     \      \-----------------------------------------'
+ *                   | LAlt | LGUI |LOWER | /Space  /       \Enter \  |RAISE |BackSP| RGUI |
+ *                   |      |      |      |/       /         \      \ |      |      |      |
+ *                   `----------------------------'           '------''--------------------'
+ */
+
+[_MISC] = LAYOUT( \
+  _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, _______,                     _______, KC_PGDN, KC_PGUP, KC_UP,   _______, _______, \
+  _______, _______, _______, _______, _______, _______,  _______, _______,  _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, _______,\
+                             _______, _______, _______,  _______, _______,  _______, _______, _______ \
+),
+
 /* ADJUST
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
@@ -152,7 +224,7 @@ void set_keylog(uint16_t keycode, keyrecord_t *record);
 const char *read_keylog(void);
 const char *read_keylogs(void);
 
-// const char *read_mode_icon(bool swap);
+const char *read_mode_icon(bool swap);
 // const char *read_host_led_state(void);
 // void set_timelog(void);
 // const char *read_timelog(void);
@@ -166,7 +238,7 @@ void matrix_render_user(struct CharacterMatrix *matrix) {
     // If you want to change the display of OLED, you need to change here
     matrix_write_ln(matrix, read_layer_state());
     matrix_write_ln(matrix, read_keylog());
-    matrix_write_ln(matrix, read_keylogs());
+    //matrix_write_ln(matrix, read_keylogs());
     //matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
     //matrix_write_ln(matrix, read_host_led_state());
     //matrix_write_ln(matrix, read_timelog());
@@ -235,4 +307,37 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         break;
   }
   return true;
+}
+
+// tap dance
+void dance_imof_finished(qk_tap_dance_state_t *state, void *user_data) {
+	if (state->count == 1) {
+		layer_on(_LOWER);
+	} else {
+		register_code(KC_F23);
+	}
+}
+
+void dance_imof_reset(qk_tap_dance_state_t *state, void *user_data) {
+	if (state->count == 1) {
+		layer_off(_LOWER);
+	} else {
+		unregister_code(KC_F23);
+	}
+}
+
+void dance_imon_finished(qk_tap_dance_state_t *state, void *user_data) {
+	if (state->count == 1) {
+		layer_on(_RAISE);
+	} else {
+		register_code(KC_F24);
+	}
+}
+
+void dance_imon_reset(qk_tap_dance_state_t *state, void *user_data) {
+	if (state->count == 1) {
+		layer_off(_RAISE);
+	} else {
+		unregister_code(KC_F24);
+	}
 }
