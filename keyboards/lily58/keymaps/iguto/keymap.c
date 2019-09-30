@@ -314,7 +314,7 @@ void dance_imof_finished(qk_tap_dance_state_t *state, void *user_data) {
 	if (state->count == 1) {
 		layer_on(_LOWER);
 	} else {
-		register_code(KC_F23);
+		register_code(KC_F13);
 	}
 }
 
@@ -322,7 +322,7 @@ void dance_imof_reset(qk_tap_dance_state_t *state, void *user_data) {
 	if (state->count == 1) {
 		layer_off(_LOWER);
 	} else {
-		unregister_code(KC_F23);
+		unregister_code(KC_F13);
 	}
 }
 
@@ -330,7 +330,7 @@ void dance_imon_finished(qk_tap_dance_state_t *state, void *user_data) {
 	if (state->count == 1) {
 		layer_on(_RAISE);
 	} else {
-		register_code(KC_F24);
+		register_code(KC_F14);
 	}
 }
 
@@ -338,6 +338,6 @@ void dance_imon_reset(qk_tap_dance_state_t *state, void *user_data) {
 	if (state->count == 1) {
 		layer_off(_RAISE);
 	} else {
-		unregister_code(KC_F24);
+		unregister_code(KC_F14);
 	}
 }
