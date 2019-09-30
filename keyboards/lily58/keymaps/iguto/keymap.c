@@ -22,6 +22,7 @@ extern uint8_t is_master;
 #define _LOWER 5
 #define _RAISE 10
 #define _TEN_KEY 11
+#define _EMACS 12
 #define _MISC 15 
 #define _ADJUST 20
 
@@ -53,6 +54,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
 
 #define MISC MO(_MISC)
 #define TEN_KEY TG(_TEN_KEY)
+#define LTE_ENT LT(_EMACS, KC_ENT)
+#define LC LCTL
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -73,11 +76,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
  [_QWERTY] = LAYOUT( \
-  KC_ESC,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_GRV, \
-  KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
-  KC_LCTRL, KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, \
-  KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,     TEN_KEY,  KC_RBRC,  KC_N,       KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MISC, \
-                             KC_LGUI, KC_LALT, TD(IMOF), KC_SPC,   KC_ENT,   TD(IMON),   KC_BSPC, KC_RGUI \
+  KC_ESC,   KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                             KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_GRV, \
+  KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                             KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
+  KC_LCTRL, KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                             KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, \
+  KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,     TEN_KEY, KC_HOME,       KC_N,       KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MISC, \
+                             KC_LGUI, KC_LALT, TD(IMOF), KC_SPC,  LTE_ENT, TD(IMON),   KC_BSPC, KC_RGUI \
 ),
 /* LOWER
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -170,6 +173,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                              _______, _______, _______,  _______, _______,  _______, _______, _______ \
 ),
 
+[_EMACS] = LAYOUT( \
+  _______, _______,  _______,  _______,  _______,  _______,                     _______,  _______,   _______, _______,  _______, _______, \
+  _______, C(KC_Q), C(KC_W), KC_END,  C(KC_R), C(KC_T),                    C(KC_Y), C(KC_U), C(KC_I), C(KC_O), KC_UP,   _______, \
+  _______, KC_HOME, C(KC_S), KC_DEL,  KC_RGHT,  C(KC_G),                    KC_BSPC,  C(KC_J), C(KC_K), C(KC_L), _______, _______, \
+  _______, C(KC_Z), C(KC_X), C(KC_V), KC_PGDN,  KC_LEFT,  _______, _______,  KC_DOWN,  C(KC_M), _______,  _______,  _______, _______,\
+                               _______,  _______,  _______,  _______, _______,  _______,  _______,  _______ \
+),
 /* ADJUST
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
