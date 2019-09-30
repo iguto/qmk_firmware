@@ -71,4 +71,4 @@ secrets.tar
 id_rsa_*
 /.vs
 
-lib/
+/lib/
