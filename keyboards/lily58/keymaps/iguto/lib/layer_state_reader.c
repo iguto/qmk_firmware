@@ -4,6 +4,7 @@
 #include "lily58.h"
 
 #define L_BASE 0
+#define L_EUCALYN 2
 #define L_LOWER 32
 #define L_RAISE 1024
 #define L_TENKEY 2048
@@ -17,7 +18,10 @@ const char *read_layer_state(void) {
   switch (layer_state)
   {
   case L_BASE:
-    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Default");
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: QWERTY");
+    break;
+  case L_EUCALYN:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: EUCALYN");
     break;
   case L_RAISE:
     snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Raise");
