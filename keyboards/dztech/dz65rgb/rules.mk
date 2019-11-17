@@ -1,4 +1,6 @@
-MCU  = STM32F303
+# MCU name
+MCU = STM32F303
+
 BACKLIGHT_ENABLE = no
 BOOTMAGIC_ENABLE = lite           # Virtual DIP switch configuration
 MOUSEKEY_ENABLE = yes              # Mouse keys
