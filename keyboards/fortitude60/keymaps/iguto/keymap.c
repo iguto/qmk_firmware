@@ -51,6 +51,7 @@ enum TapDanceDeclearations {
 #define TG_OW TG(_OVERWATCH)
 #define TG_BF TG(_BF)
 #define TG_MHW TG(_MHW)
+#define TG_EUCALYN TG(_EUCALYN)
 #define ALT_TAB LALT(KC_TAB)
 
 
@@ -82,18 +83,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *               `---------------------------------------------------------------------'
  */
 [_QWERTY] = LAYOUT( \
-  KC_GRV,    KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                     KC_6,   KC_7,      KC_8,    KC_9,    KC_0,    KC_ESC, \
-  KC_TAB,    KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,    KC_BSPC, \
-  KC_LCTL,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                     KC_H,   KC_J,      KC_K,    KC_L,    KC_SCLN, KC_ENT, \
-  KC_LSFT,   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  KC_LBRC,  TG_OW,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH, MISC, \
-                  KC_LGUI, KC_LALT,  TD(IMOF),  KC_SPC, KC_ENT,  KC_LCTL, LTE_SP, TD(IMON),  KC_RALT, KC_RGUI\
+  KC_ESC,    KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                       KC_6,   KC_7,      KC_8,    KC_9,    KC_0,    KC_GRV, \
+  KC_TAB,    KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                       KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,    KC_BSPC, \
+  KC_LCTL,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                       KC_H,   KC_J,      KC_K,    KC_L,    KC_SCLN, KC_ENT, \
+  KC_LSFT,   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  TG_EUCALYN, TG_OW,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH, MISC, \
+                  KC_LGUI, KC_LALT,  TD(IMOF),  KC_SPC, KC_SPC,    KC_LCTL, LTE_SP, TD(IMON),  KC_RALT, KC_RGUI\
 ),
 
-/* Colemak
+/* EUCALYN
  * ,-----------------------------------------.             ,-----------------------------------------.
  * |   `  |   1  |   2  |   3  |   4  |   5  |             |   6  |   7  |   8  |   9  |   0  | Del  |
  * |------+------+------+------+------+------|             |------+------+------+------+------+------|
- * | Tab  |   Q  |   W  |   ,  |   .  |   M  |             |   R  |   D  |   Y  |   P  |   ;  | Bksp |
+ * | Tab  |   Q  |   W  |   ,  |   .  |   ;  |             |   M  |   R  |   D  |   Y  |   P  | Bksp |
  * |------+------+------+------+------+------|             |------+------+------+------+------+------|
  * | Esc  |   A  |   O  |   E  |   I  |   U  |             |   G  |   T  |   K  |   S  |   N  |  "   |
  * |------+------+------+------+------+------+-------------+------+------+------+------+------+------|
@@ -104,10 +105,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [_EUCALYN] = LAYOUT( \
   KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                   KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
-  KC_TAB,  KC_Q,    KC_W,    KC_F,    KC_P,    KC_G,                   KC_J,    KC_L,    KC_U,    KC_Y,    KC_SCLN, KC_BSPC, \
-  KC_ESC,  KC_A,    KC_R,    KC_S,    KC_T,    KC_D,                   KC_H,    KC_N,    KC_E,    KC_I,    KC_O,    KC_QUOT, \
-  KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B, KC_LBRC, KC_RBRC, KC_K,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_ENT , \
-                 KC_LGUI, KC_LALT,   LOWER,  KC_SPC, KC_LCTL,  KC_ENT, KC_SPC, RAISE,    KC_RALT, KC_RGUI\
+  KC_TAB,  KC_Q,    KC_W,    KC_COMM, KC_DOT,  KC_SCLN,                KC_M,    KC_R,    KC_D,    KC_Y,    KC_P,    KC_BSPC, \
+  KC_LCTL,  KC_A,    KC_O,    KC_E,    KC_I,    KC_U,                   KC_G,    KC_T,    KC_K,    KC_S,    KC_N,    KC_ENT, \
+  KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_F, _______, _______, KC_B,    KC_H,    KC_J,    KC_L,    KC_SLSH, MISC , \
+                  KC_LGUI, KC_LALT,  TD(IMOF),  KC_SPC, KC_SPC,    KC_LCTL, LTE_SP, TD(IMON),  KC_RALT, KC_RGUI\
 ),
 
 /* Dvorak
@@ -145,11 +146,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *               `---------------------------------------------------------------------'
  */
 [_LOWER] = LAYOUT( \
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______, \
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______, \
-  KC_DEL,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,                     KC_F6,   _______ , _______, _______, _______, KC_PIPE, \
-  _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  _______, NOTE_B1, KC_F12 , S(KC_NUHS),S(KC_NUBS),_______, _______, _______,\
-                    _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______\
+  KC_GRV , KC_1,   KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______, \
+  KC_F1,   KC_F2,  KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______, \
+  KC_F7,   KC_F8,  KC_F9,   KC_F10,  KC_F11,  KC_F12,                    KC_F6,   _______, _______, _______, _______, KC_PIPE, \
+  _______, KC_1,   KC_2,    KC_3,    KC_4,    KC_5,   _______, NOTE_B1,  KC_6 ,   KC_7,    KC_8,    KC_9,    KC_0,    _______, \
+                  _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______\
 ),
 
 /* Raise
@@ -381,7 +382,8 @@ void dance_imof_finished(qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     layer_on(_LOWER);
   } else {
-    register_code(KC_F23);
+    //register_code(KC_F23);
+    register_code(KC_F13);
   }
 }
 
@@ -389,7 +391,8 @@ void dance_imof_reset(qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     layer_off(_LOWER);
   } else {
-    unregister_code(KC_F23);
+    //unregister_code(KC_F23);
+    unregister_code(KC_F13);
   }
 }
 
@@ -397,7 +400,8 @@ void dance_imon_finished(qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     layer_on(_RAISE);
   } else {
-    register_code(KC_F24);
+    //register_code(KC_F24);
+    register_code(KC_F14);
   }
 }
 
@@ -405,7 +409,8 @@ void dance_imon_reset(qk_tap_dance_state_t *state, void *user_data) {
   if (state->count == 1) {
     layer_off(_RAISE);
   } else {
-    unregister_code(KC_F24);
+    //unregister_code(KC_F24);
+    unregister_code(KC_F14);
   }
 }
 
