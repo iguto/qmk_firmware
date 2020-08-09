@@ -2,6 +2,7 @@ SRC += konstantin.c
 ifeq ($(strip $(RGBLIGHT_ENABLE)), yes)
     SRC += rgb.c
 endif
+RGB_MATRIX_ENABLE ?= no
 ifneq ($(strip $(RGB_MATRIX_ENABLE)), no)
     SRC += rgb.c
 endif
@@ -12,4 +13,6 @@ ifneq (,$(filter yes,$(UNICODE_ENABLE) $(UNICODEMAP_ENABLE)))
     SRC += unicode.c
 endif
 
-EXTRAFLAGS += -flto
+ifneq ($(PLATFORM),CHIBIOS)
+    LTO_ENABLE = yes
+endif
