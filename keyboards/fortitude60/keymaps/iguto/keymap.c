@@ -1,24 +1,23 @@
 #include QMK_KEYBOARD_H
-#include "eeconfig.h"
-
-extern keymap_config_t keymap_config;
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
-#define _QWERTY 0
-#define _EUCALYN 1
-#define _DVORAK 2
-#define _OVERWATCH 3
-#define _BF 4
-#define _MHW 5
-#define _LOWER 10
-#define _RAISE 11
-#define _MISC  12
-#define _EMACS 13
-#define _ADJUST 16
-#define _MOUSE 17
+enum my_layers {
+   _QWERTY,
+   _EUCALYN,
+   _DVORAK,
+   _OVERWATCH,
+   _BF,
+   _MHW,
+   _LOWER,
+   _RAISE,
+   _MISC,
+   _EMACS,
+   _ADJUST,
+   _MOUSE 
+};
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
@@ -33,10 +32,11 @@ enum custom_keycodes {
   //TD_IMOF,
 };
 
-enum TapDanceDeclearations {
-  IMON,
-  IMOF
-};
+//enum TapDanceDeclearations {
+//  IMON,
+//  IMOF
+//};
+
 // Fillers to make layering more clear
 #define _______ KC_TRNS
 #define XXXXXXX KC_NO
@@ -55,17 +55,17 @@ enum TapDanceDeclearations {
 #define ALT_TAB LALT(KC_TAB)
 
 
-void dance_imof_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_imof_reset(qk_tap_dance_state_t *state, void *user_data);
-void dance_imon_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_imon_reset(qk_tap_dance_state_t *state, void *user_data);
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-    //[IMON] = ACTION_TAP_DANCE_DOUBLE(LOWER, KC_F23),
-    //[IMOF] = ACTION_TAP_DANCE_DOUBLE(RAISE, KC_F24)
-    [IMON] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_imon_finished, dance_imon_reset),
-    [IMOF] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_imof_finished, dance_imof_reset),
-};
+//void dance_imof_finished(qk_tap_dance_state_t *state, void *user_data);
+//void dance_imof_reset(qk_tap_dance_state_t *state, void *user_data);
+//void dance_imon_finished(qk_tap_dance_state_t *state, void *user_data);
+//void dance_imon_reset(qk_tap_dance_state_t *state, void *user_data);
+//
+//qk_tap_dance_action_t tap_dance_actions[] = {
+//    //[IMON] = ACTION_TAP_DANCE_DOUBLE(LOWER, KC_F23),
+//    //[IMOF] = ACTION_TAP_DANCE_DOUBLE(RAISE, KC_F24)
+//    [IMON] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_imon_finished, dance_imon_reset),
+//    [IMOF] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_imof_finished, dance_imof_reset),
+//};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -87,7 +87,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,    KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                       KC_Y,   KC_U,      KC_I,    KC_O,    KC_P,    KC_BSPC, \
   KC_LCTL,   KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                       KC_H,   KC_J,      KC_K,    KC_L,    KC_SCLN, KC_ENT, \
   KC_LSFT,   KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  TG_EUCALYN, TG_OW,   KC_N,   KC_M,      KC_COMM, KC_DOT,  KC_SLSH, MISC, \
-                  KC_LGUI, KC_LALT,  TD(IMOF),  KC_SPC, KC_SPC,    KC_LCTL, LTE_SP, TD(IMON),  KC_RALT, KC_RGUI\
+                  KC_LGUI, KC_LALT,  LOWER,  KC_SPC, KC_SPC,    KC_LCTL, LTE_SP, RAISE,  KC_RALT, KC_RGUI\
 ),
 
 /* EUCALYN
@@ -108,7 +108,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,  KC_Q,    KC_W,    KC_COMM, KC_DOT,  KC_SCLN,                KC_M,    KC_R,    KC_D,    KC_Y,    KC_P,    KC_BSPC, \
   KC_LCTL,  KC_A,    KC_O,    KC_E,    KC_I,    KC_U,                   KC_G,    KC_T,    KC_K,    KC_S,    KC_N,    KC_ENT, \
   KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_F, _______, _______, KC_B,    KC_H,    KC_J,    KC_L,    KC_SLSH, MISC , \
-                  KC_LGUI, KC_LALT,  TD(IMOF),  KC_SPC, KC_SPC,    KC_LCTL, LTE_SP, TD(IMON),  KC_RALT, KC_RGUI\
+                  KC_LGUI, KC_LALT,  LOWER,  KC_SPC, KC_SPC,    KC_LCTL, LTE_SP, RAISE,  KC_RALT, KC_RGUI\
 ),
 
 /* Dvorak
@@ -150,7 +150,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_F1,   KC_F2,  KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    _______, \
   KC_F7,   KC_F8,  KC_F9,   KC_F10,  KC_F11,  KC_F12,                    KC_F6,   _______, _______, _______, _______, KC_PIPE, \
   _______, KC_1,   KC_2,    KC_3,    KC_4,    KC_5,   _______, NOTE_B1,  KC_6 ,   KC_7,    KC_8,    KC_9,    KC_0,    _______, \
-                  _______, _______, _______, _______, _______, _______,  _______, _______, _______, _______\
+                  _______, _______, _______, _______, _______, _______,  KC_F23,  _______, _______, _______\
 ),
 
 /* Raise
@@ -171,7 +171,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TILD, KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,                           KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL, \
   KC_DEL,  KC_LEFT, KC_DOWN, KC_RGHT, KC_F4,   KC_F5,                             KC_F6,   KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC, KC_BSLS, \
   _______, KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  _______, TG_BF,  KC_F12,  KC_QUOT, KC_NUBS, _______, _______, _______, \
-                    _______, _______, _______, _______, _______, _______,         _______, _______, _______, _______\
+                    _______, _______, _______, KC_F24,  _______, _______,         _______, _______, _______, _______\
 ),
 
 /* Misc
@@ -378,39 +378,39 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 //  DOUBLE_TAP = 3,
 //};
 
-void dance_imof_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    layer_on(_LOWER);
-  } else {
-    //register_code(KC_F23);
-    register_code(KC_F13);
-  }
-}
-
-void dance_imof_reset(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    layer_off(_LOWER);
-  } else {
-    //unregister_code(KC_F23);
-    unregister_code(KC_F13);
-  }
-}
-
-void dance_imon_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    layer_on(_RAISE);
-  } else {
-    //register_code(KC_F24);
-    register_code(KC_F14);
-  }
-}
-
-void dance_imon_reset(qk_tap_dance_state_t *state, void *user_data) {
-  if (state->count == 1) {
-    layer_off(_RAISE);
-  } else {
-    //unregister_code(KC_F24);
-    unregister_code(KC_F14);
-  }
-}
-
+// void dance_imof_finished(qk_tap_dance_state_t *state, void *user_data) {
+//   if (state->count == 1) {
+//     layer_on(_LOWER);
+//   } else {
+//     //register_code(KC_F23);
+//     register_code(KC_F13);
+//   }
+// }
+// 
+// void dance_imof_reset(qk_tap_dance_state_t *state, void *user_data) {
+//   if (state->count == 1) {
+//     layer_off(_LOWER);
+//   } else {
+//     //unregister_code(KC_F23);
+//     unregister_code(KC_F13);
+//   }
+// }
+// 
+// void dance_imon_finished(qk_tap_dance_state_t *state, void *user_data) {
+//   if (state->count == 1) {
+//     layer_on(_RAISE);
+//   } else {
+//     //register_code(KC_F24);
+//     register_code(KC_F14);
+//   }
+// }
+// 
+// void dance_imon_reset(qk_tap_dance_state_t *state, void *user_data) {
+//   if (state->count == 1) {
+//     layer_off(_RAISE);
+//   } else {
+//     //unregister_code(KC_F24);
+//     unregister_code(KC_F14);
+//   }
+// }
+// 

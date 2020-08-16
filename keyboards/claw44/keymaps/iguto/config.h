@@ -1,5 +1,8 @@
 /*
-Copyright 2017 Danny Nguyen <danny@hexwire.com>
+This is the c configuration file for the keymap
+
+Copyright 2012 Jun Wako <wakojun@gmail.com>
+Copyright 2015 Jack Humbert
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,8 +20,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#define USE_SERIAL
-#define SELECT_SOFT_SERIAL_SPEED 2
-#undef DEBOUNCE
-#define DEBOUNCE 3
-#define USE_POLLING_INTERVAL_MS 1
+//#define USE_MATRIX_I2C
+
+/* Select hand configuration */
+
+#define MASTER_LEFT
+// #define MASTER_RIGHT
+// #define EE_HANDS
+
+#define SSD1306OLED
+
+#define USE_SERIAL_PD2
+
+#define TAPPING_TERM 200
+
+enum my_keymap {
+  _QWERTY = 0,
+  _LOWER,
+  _RAISE,
+  _ADJUST,
+  _MISC,
+};

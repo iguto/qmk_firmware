@@ -47,9 +47,9 @@
                                   KC_##L30, KC_##L31, KC_##L32, KC_##L33, KC_##R30, KC_##R31, KC_##R32, KC_##R33 \
   )
 
-enum layer_number {
-  _QWERTY = 0,
-  _LOWER,
-  _RAISE,
-  _ADJUST,
-};
+//enum layer_number {
+//  _QWERTY = 0,
+//  _LOWER,
+//  _RAISE,
+//  _ADJUST,
+//};
