@@ -34,10 +34,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define TAPPING_TERM 200
 
-enum my_keymap {
-  _QWERTY = 0,
-  _LOWER,
-  _RAISE,
-  _ADJUST,
-  _MISC,
-};
+#define _QWERTY 0
+#define _LOWER 1
+#define _RAISE 2
+#define _ADJUST 3
+#define _MISC 4
+
+//enum my_keymap {
+//  _QWERTY = 0,
+//  _LOWER,
+//  _RAISE,
+//  _ADJUST,
+//  _MISC,
+//};
