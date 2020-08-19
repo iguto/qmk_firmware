@@ -31,15 +31,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SSD1306OLED
 
 #define USE_SERIAL_PD2
-
 #define TAPPING_TERM 200
+#undef DEBOUNCE
+#define DEBOUNCE 2
+#undef USB_POLLING_INTERVAL_MS
+#define USB_POLLING_INTERVAL_MS 2
 
 #define _QWERTY 0
-#define _LOWER 1
-#define _RAISE 2
-#define _ADJUST 3
-#define _MISC 4
-#define _EMACS 5
+#define _EUCALYN 1
+#define _LOWER 2
+#define _RAISE 3
+#define _ADJUST 4
+#define _MISC 5
+#define _EMACS 6
 
 //enum my_keymap {
 //  _QWERTY = 0,
