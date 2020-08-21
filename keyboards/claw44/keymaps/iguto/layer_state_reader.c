@@ -20,11 +20,13 @@
 
 char layer_state_str[24];
 
+char text[3] = { 0x18, 0x1e, 0 };
 const char *read_layer_state(void) {
   switch (layer_state)
   {
   case L_BASE:
-    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Default");
+    //snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Default");
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Default -- %s", text);
     break;
   case L_QWERTY:
     snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Qwerty");
