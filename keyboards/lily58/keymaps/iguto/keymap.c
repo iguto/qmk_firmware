@@ -8,9 +8,6 @@
   #include "ssd1306.h"
 #endif
 
-
-extern keymap_config_t keymap_config;
-
 #ifdef RGBLIGHT_ENABLE
 //Following line allows macro to read current RGB settings
 extern rgblight_config_t rgblight_config;
@@ -34,23 +31,8 @@ enum custom_keycodes {
   ADJUST,
 };
 
-
-enum tap_dance_declearations {
-	IMON,
-	IMOF,
-};
-
-void dance_imon_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_imon_reset(qk_tap_dance_state_t *state, void *user_data);
-void dance_imof_finished(qk_tap_dance_state_t *state, void *user_data);
-void dance_imof_reset(qk_tap_dance_state_t *state, void *user_data);
-
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-	[IMON] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_imon_finished, dance_imon_reset),
-	[IMOF] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_imof_finished, dance_imof_reset),
-};
-
+#define LOWER MO(_LOWER)
+#define RAISE MO(_RAISE)
 #define MISC MO(_MISC)
 #define TEN_KEY TG(_TEN_KEY)
 
@@ -77,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC, \
   KC_LCTRL, KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, \
   KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,     TEN_KEY,  KC_RBRC,  KC_N,       KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MISC, \
-                             KC_LGUI, KC_LALT, TD(IMOF), KC_SPC,   KC_ENT,   TD(IMON),   KC_BSPC, KC_RGUI \
+                             KC_LGUI, KC_LALT, LOWER, KC_SPC,   KC_ENT,   RAISE,   KC_BSPC, KC_RGUI \
 ),
 /* LOWER
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -98,7 +80,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12, \
   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,                    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TILD, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, \
-                             _______, _______, _______, _______, _______,  _______, _______, _______\
+                             _______, _______, _______, _______, KC_F13,  _______, _______, _______\
 ),
 /* RAISE
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -120,7 +102,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                       _______, KC_MINS, KC_EQL, KC_LBRC, KC_RBRC,  KC_BSLS, \
   KC_LSFT, KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,   _______, _______,  KC_MINS, KC_QUOT, KC_NUBS, _______, _______, _______,\
-                             _______, _______, _______,  _______, _______,  _______, _______, _______ \
+                             _______, _______, _______,  KC_F14,  _______,  _______, _______, _______ \
 ),
 
 
@@ -208,14 +190,16 @@ void matrix_init_user(void) {
     #ifdef RGBLIGHT_ENABLE
       RGB_current_mode = rgblight_config.mode;
     #endif
-    //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
-    #ifdef SSD1306OLED
-        iota_gfx_init(!has_usb());   // turns on the display
-    #endif
 }
 
 //SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
-#ifdef SSD1306OLED
+#ifdef OLED_DRIVER_ENABLE
+
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+  if (!is_keyboard_master())
+    return OLED_ROTATION_180;  // flips the display 180 degrees if offhand
+  return rotation;
+}
 
 // When add source files to SRC in rules.mk, you can use functions.
 const char *read_layer_state(void);
@@ -224,47 +208,29 @@ void set_keylog(uint16_t keycode, keyrecord_t *record);
 const char *read_keylog(void);
 const char *read_keylogs(void);
 
-const char *read_mode_icon(bool swap);
+//const char *read_mode_icon(bool swap);
 // const char *read_host_led_state(void);
 // void set_timelog(void);
 // const char *read_timelog(void);
 
-void matrix_scan_user(void) {
-   iota_gfx_task();
-}
-
-void matrix_render_user(struct CharacterMatrix *matrix) {
-  if (is_master) {
+void oled_task_user(void) {
+  if (is_keyboard_master()) {
     // If you want to change the display of OLED, you need to change here
-    matrix_write_ln(matrix, read_layer_state());
-    matrix_write_ln(matrix, read_keylog());
-    //matrix_write_ln(matrix, read_keylogs());
-    //matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
-    //matrix_write_ln(matrix, read_host_led_state());
-    //matrix_write_ln(matrix, read_timelog());
+    oled_write_ln(read_layer_state(), false);
+    oled_write_ln(read_keylog(), false);
+    oled_write_ln(read_keylogs(), false);
+    //oled_write_ln(read_mode_icon(keymap_config.swap_lalt_lgui), false);
+    //oled_write_ln(read_host_led_state(), false);
+    //oled_write_ln(read_timelog(), false);
   } else {
-    matrix_write(matrix, read_logo());
+    oled_write(read_logo(), false);
   }
-}
-
-void matrix_update(struct CharacterMatrix *dest, const struct CharacterMatrix *source) {
-  if (memcmp(dest->display, source->display, sizeof(dest->display))) {
-    memcpy(dest->display, source->display, sizeof(dest->display));
-    dest->dirty = true;
-  }
-}
-
-void iota_gfx_task_user(void) {
-  struct CharacterMatrix matrix;
-  matrix_clear(&matrix);
-  matrix_render_user(&matrix);
-  matrix_update(&display, &matrix);
 }
 #endif//SSD1306OLED
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
-#ifdef SSD1306OLED
+#ifdef OLED_DRIVER_ENABLE
     set_keylog(keycode, record);
 #endif
     // set_timelog();
@@ -309,35 +275,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   return true;
 }
 
-// tap dance
-void dance_imof_finished(qk_tap_dance_state_t *state, void *user_data) {
-	if (state->count == 1) {
-		layer_on(_LOWER);
-	} else {
-		register_code(KC_F23);
-	}
-}
-
-void dance_imof_reset(qk_tap_dance_state_t *state, void *user_data) {
-	if (state->count == 1) {
-		layer_off(_LOWER);
-	} else {
-		unregister_code(KC_F23);
-	}
-}
-
-void dance_imon_finished(qk_tap_dance_state_t *state, void *user_data) {
-	if (state->count == 1) {
-		layer_on(_RAISE);
-	} else {
-		register_code(KC_F24);
-	}
-}
-
-void dance_imon_reset(qk_tap_dance_state_t *state, void *user_data) {
-	if (state->count == 1) {
-		layer_off(_RAISE);
-	} else {
-		unregister_code(KC_F24);
-	}
-}
