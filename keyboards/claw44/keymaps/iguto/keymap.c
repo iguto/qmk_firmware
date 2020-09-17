@@ -7,6 +7,9 @@
   #include "ssd1306.h"
 #endif
 
+#include "naginata.h"
+NGKEYS naginata_keys;
+
 
 extern uint8_t is_master;
 
@@ -16,10 +19,14 @@ extern uint8_t is_master;
 // entirely and just use numbers.
 
 enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
+  QWERTY = NG_SAFE_RANGE,
+  EUCALYN,
   LOWER,
   RAISE,
-  ADJUST,
+  OLED_OFF,
+  LCTOGL,
+  EISU,
+  KANA2
 };
 
 enum macro_keycodes {
@@ -28,6 +35,7 @@ enum macro_keycodes {
 
 #define KC_ KC_TRNS
 #define KC_RST RESET
+
 #define KC_L_SPC LT(_LOWER, KC_SPC) // lower
 #define KC_R_ENT LT(_RAISE, KC_ENT) // raise
 #define KC_G_JA LGUI_T(KC_LANG1) // cmd or win
@@ -36,7 +44,13 @@ enum macro_keycodes {
 #define KC_A_DEL ALT_T(KC_DEL) // alt
 
 #define MISC MO(_MISC)
-#define ADJ MO(_ADJUST)
+#define LOWER MO(_LOWER)
+#define RAISE MO(_RAISE)
+#define EMACS MO(_EMACS)
+#define D_Q   DF(_QWERTY)
+#define T_E   TG(_EUCALYN)
+#define T_E2   TG(_EUCALYN2)
+#define T_D   TG(_DOC)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -48,8 +62,56 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
      KC_LSFT, KC_Z   , KC_X    , KC_C   , KC_V    , KC_B   ,     KC_N   , KC_M    , KC_COMM, KC_DOT  , KC_SLSH, MISC, 
   //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
-                       KC_A_DEL, KC_G_EN, KC_L_SPC, KC_C_BS,     KC_C_BS, KC_R_ENT, KC_G_JA, ADJ 
+                       KC_LALT,  LOWER  , KC_SPC,   KC_LSFT,     KC_RCTL, EMACS   , RAISE  , KC_LGUI 
   //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
+  ),
+  [_EUCALYN] = LAYOUT( \
+  //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+     KC_TAB , KC_Q,    KC_W   ,  KC_COMM, KC_DOT , KC_SCLN ,     KC_M   , KC_R    , KC_D   , KC_Y    , KC_P   , KC_BSPC,
+  //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
+     KC_LCTL, KC_A   , KC_O    , KC_E   , KC_I    , KC_U   ,     KC_G   , KC_T    , KC_K   , KC_S    , KC_N,    KC_ENT,
+  //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
+     KC_LSFT, KC_Z   , KC_X    , KC_C   , KC_V    , KC_F   ,     KC_B   , KC_H    , KC_J   , KC_L    , KC_SLSH, MISC, 
+  //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
+                       KC_LALT,  LOWER  , KC_SPC,   KC_LSFT,     KC_RCTL, EMACS   , RAISE  , KC_LGUI 
+  //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
+  ),
+
+  [_EUCALYN2] = LAYOUT( \
+  //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+     KC_TAB , KC_SCLN, KC_COMM ,  KC_DOT, KC_P    , KC_Q   ,     KC_Y   , KC_G    , KC_D   , KC_M    , KC_F   , KC_BSPC,
+  //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
+     KC_LCTL, KC_A   , KC_O    , KC_E   , KC_I    , KC_U   ,     KC_B   , KC_N    , KC_T   , KC_R    , KC_S,    KC_ENT,
+  //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
+     KC_LSFT, KC_Z   , KC_X    , KC_C   , KC_V    , KC_W   ,     KC_H   , KC_J    , KC_K   , KC_L    , KC_SLSH, MISC, 
+  //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
+                       KC_LALT,  LOWER  , KC_SPC,   KC_LSFT,     KC_RCTL, EMACS   , RAISE  , KC_LGUI 
+  //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
+  ),
+
+  [_NAGINATA] = LAYOUT( \
+  //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+     _______ ,NG_Q   , NG_W,     NG_E,    NG_R    , NG_T   ,     NG_Y   , NG_U    , NG_I   , NG_O    , NG_P   , KC_BSPC,
+  //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
+     _______, NG_A   , NG_S    , NG_D   , NG_F    , NG_G   ,     NG_H   , NG_J    , NG_K   , NG_L    , NG_SCLN, KC_ENT,
+  //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
+     _______, NG_Z   , NG_X    , NG_C   , NG_V    , NG_B   ,     NG_N   , NG_M    , NG_COMM, NG_DOT  , NG_SLSH, MISC, 
+  //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
+                       KC_LALT,  LOWER  , NG_SHFT, KC_SPC,       KC_RCTL, NG_SHFT   , RAISE  , KC_LGUI 
+  //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
+  ),
+
+  [_LOWER] = LAYOUT( \
+  //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
+     KC_ESC,  _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
+  //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
+     _______, KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,     KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , _______,
+  //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
+     _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
+  //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
+                       RESET  , _______, _______, _______,     _______, KC_F13,  _______, EISU
+  //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
+  //
   ),
 
   //   \ ^ ! & |  @ = + * % -
@@ -58,36 +120,22 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_RAISE] = LAYOUT( \
   //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
-     KC_ESC , KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_GRV,
+     KC_ESC , KC_EXLM, KC_AT,   KC_HASH, KC_DLR,  KC_PERC,     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
   //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-     _______, _______, _______, _______, _______, _______,     _______, KC_MINS, KC_EQL , KC_LBRC, KC_RBRC ,KC_BSLS,
+     _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,        KC_GRV,  KC_MINS, KC_EQL , KC_LBRC, KC_RBRC, KC_BSLS,
   //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-     _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
+     _______, KC_6,    KC_7,    KC_8,    KC_9,    KC_0,        _______, KC_QUOT, _______, _______, _______, _______,
   //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
-                       _______, _______, _______, _______,     _______, _______, _______, _______
+                       KANA2, _______, KC_F14 , _______,     _______, _______, _______, _______
   //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
   ),
-
-  [_LOWER] = LAYOUT( \
-  //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
-     KC_F1  , KC_F2  , KC_F3  , KC_F4  , KC_F5  , KC_F6  ,     _______, KC_EQL , KC_PLUS, KC_ASTR, KC_PERC, KC_MINS,
-  //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-     _______, KC_1   , KC_2   , KC_3   , KC_4   , KC_5   ,     KC_6   , KC_7   , KC_8   , KC_9   , KC_0   , _______,
-  //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-     KC_F7  , KC_F8  , KC_F9  , KC_F10 , KC_F11 , KC_F12 ,     _______, _______, KC_COMM, KC_DOT , KC_SLSH, _______,
-  //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
-                       RESET  , _______, _______, _______,     _______, _______, _______, _______
-  //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
-  //
-  ),
-
   [_ADJUST] = LAYOUT( \
   //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
-     XXXXXXX, RESET  , KC_1   , XXXXXXX, XXXXXXX, KC_F6  ,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+     XXXXXXX, RESET  , T_E2   , T_E    , QWERTY , XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_5   ,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+     XXXXXXX, XXXXXXX, XXXXXXX, T_D,     XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_F12 ,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
   //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
                        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
   //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
@@ -95,15 +143,39 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_MISC] = LAYOUT( \
   //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
-     XXXXXXX, RESET  , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+     KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,       KC_F7,   KC_F8 ,  KC_F9,   KC_F10,  KC_F11,  KC_F12,
   //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, KC_PGDN, KC_PGUP, KC_UP  , XXXXXXX, XXXXXXX,
+     _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, KC_PGDN, KC_PGUP, KC_UP  , KC_RGHT, XXXXXXX,
   //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, _______,
+     _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, _______,
   //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
-                       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX
+                       _______, _______, _______, _______,     _______, _______, _______, _______
+  //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
+  ),
+  [_EMACS] = LAYOUT( \
+  //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
+     _______, _______, _______, KC_END , _______, _______,     _______, _______, _______, _______, KC_UP,   _______,
+  //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
+     _______, KC_HOME, _______, KC_DEL , KC_RGHT, KC_ESC,     _______, _______, _______,  _______, _______, _______,
+  //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
+     _______, _______, _______, _______, _______, KC_LEFT,     KC_DOWN, _______, _______, _______, _______, _______,
+  //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
+                       _______, _______,  _______, _______,     _______, _______, _______, _______
+  //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
+  ),
+
+  [_DOC] = LAYOUT( \
+  //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
+     _______, _______, _______, _______ , _______, _______,     _______, _______, _______, _______, _______,   _______,
+  //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
+     _______, _______, _______, _______, _______, _______,     KC_3,    KC_1,   KC_1   ,  KC_2, _______, _______,
+  //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
+     _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
+  //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
+                       _______, _______, _______, _______,     S(KC_ENT), KC_ENT, _______, _______
   //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
   )
+
 };
 
 void matrix_init_user(void) {
@@ -111,6 +183,20 @@ void matrix_init_user(void) {
   #ifdef SSD1306OLED
     iota_gfx_init(!has_usb());   // turns on the display
   #endif
+  uint16_t ngonkeys[] = {KC_H, KC_J};
+  uint16_t ngoffkeys[] = {KC_F, KC_G};
+  set_naginata(_NAGINATA, ngonkeys, ngoffkeys);
+  
+  #ifdef NAGINATA_EDIT_MAC
+  set_unicode_input_mode(UC_OSX);
+  #endif
+  #ifdef NAGINATA_EDIT_WIN
+  set_unicode_input_mode(UC_WINC);
+  #endif
+}
+
+void keyboard_post_init_user(void) {
+  set_single_persistent_default_layer(_QWERTY);
 }
 
 //SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
@@ -178,26 +264,37 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case LOWER:
       if (record->event.pressed) {
         layer_on(_LOWER);
-	update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_LOWER);
-	update_tri_layer(_LOWER, _RAISE, _ADJUST);
       }
       return false;
     case RAISE:
       if (record->event.pressed) {
         layer_on(_RAISE);
-	update_tri_layer(_LOWER, _RAISE, _ADJUST);
       } else {
         layer_off(_RAISE);
-	update_tri_layer(_LOWER, _RAISE, _ADJUST);
+      }
+      return false;
+    case EISU:
+      if (record->event.pressed) {
+        naginata_off();
+      }
+      return false;
+    case KANA2:
+      if (record->event.pressed) {
+        naginata_on();
       }
       return false;
   }
+
+  if (!process_naginata(keycode, record)) {
+    return false;
+  }
+
   return true;
 }
 
-//uint32_t layer_state_set_user(uint32_t state) {
-//  state = update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
-//}
-
+layer_state_t layer_state_set_user(layer_state_t state) {
+  // raise + misc could be used
+  return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+}
