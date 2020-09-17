@@ -6,6 +6,7 @@
 #define L_BASE 0
 #define L_QWERTY (1<<_QWERTY)
 #define L_EUCALYN (1<<_EUCALYN)
+#define L_EUCALYN2 (1<<_EUCALYN2)
 #define L_LOWER (1<<_LOWER)
 #define L_LOWER_E (L_LOWER|L_EUCALYN)
 #define L_RAISE (1<<_RAISE)
@@ -17,6 +18,7 @@
 #define L_MISC_E (L_MISC|L_EUCALYN)
 #define L_EMACS (1<<_EMACS)
 #define L_EMACS_E (L_EMACS|L_EUCALYN)
+#define L_DOC (1<<_DOC)
 
 char layer_state_str[24];
 
@@ -33,6 +35,9 @@ const char *read_layer_state(void) {
     break;
   case L_EUCALYN:
     snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Eucalyn");
+    break;
+  case L_EUCALYN2:
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer: Eucalyn2");
     break;
   case L_RAISE:
   case L_RAISE_E:

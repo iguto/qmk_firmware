@@ -39,11 +39,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define _QWERTY 0
 #define _EUCALYN 1
-#define _LOWER 2
-#define _RAISE 3
-#define _ADJUST 4
-#define _MISC 5
-#define _EMACS 6
+#define _EUCALYN2 2
+#define _LOWER 3
+#define _RAISE 4
+#define _ADJUST 5
+#define _MISC 6
+#define _EMACS 7
+#define _DOC 10
 
 //enum my_keymap {
 //  _QWERTY = 0,
