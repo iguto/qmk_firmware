@@ -40,12 +40,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _QWERTY 0
 #define _EUCALYN 1
 #define _EUCALYN2 2
-#define _LOWER 3
-#define _RAISE 4
-#define _ADJUST 5
-#define _MISC 6
-#define _EMACS 7
-#define _DOC 10
+#define _NAGINATA 3
+#define _LOWER 8
+#define _RAISE 9
+#define _ADJUST 10
+#define _MISC 11
+#define _EMACS 12
+#define _DOC 13
+
 
 //enum my_keymap {
 //  _QWERTY = 0,
@@ -54,3 +56,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //  _ADJUST,
 //  _MISC,
 //};
+
+/* 薙刀式 */
+//#define NAGINATA_YOKOGAKI
+#define NAGINATA_TATEGAKI
+//#define NAGINATA_EDIT_WIN // JP106
+//#define NAGINATA_EDIT_MAC // JP106
+//#define MAC_LIVE_CONVERSION // Macでライブ変換をオンにしている場合
+//#define COMBO_COUNT 2

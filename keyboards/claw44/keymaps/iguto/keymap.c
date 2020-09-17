@@ -7,6 +7,9 @@
   #include "ssd1306.h"
 #endif
 
+#include "naginata.h"
+NGKEYS naginata_keys;
+
 
 extern uint8_t is_master;
 
@@ -16,11 +19,14 @@ extern uint8_t is_master;
 // entirely and just use numbers.
 
 enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
+  QWERTY = NG_SAFE_RANGE,
   EUCALYN,
   LOWER,
   RAISE,
   OLED_OFF,
+  LCTOGL,
+  EISU,
+  KANA2
 };
 
 enum macro_keycodes {
@@ -83,6 +89,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
   ),
 
+  [_NAGINATA] = LAYOUT( \
+  //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+     _______ ,NG_Q   , NG_W,     NG_E,    NG_R    , NG_T   ,     NG_Y   , NG_U    , NG_I   , NG_O    , NG_P   , KC_BSPC,
+  //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
+     _______, NG_A   , NG_S    , NG_D   , NG_F    , NG_G   ,     NG_H   , NG_J    , NG_K   , NG_L    , NG_SCLN, KC_ENT,
+  //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
+     _______, NG_Z   , NG_X    , NG_C   , NG_V    , NG_B   ,     NG_N   , NG_M    , NG_COMM, NG_DOT  , NG_SLSH, MISC, 
+  //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
+                       KC_LALT,  LOWER  , NG_SHFT, KC_SPC,       KC_RCTL, NG_SHFT   , RAISE  , KC_LGUI 
+  //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
+  ),
+
   [_LOWER] = LAYOUT( \
   //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
      KC_ESC,  _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
@@ -91,7 +109,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
      _______, _______, _______, _______, _______, _______,     _______, _______, _______, _______, _______, _______,
   //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
-                       RESET  , _______, _______, _______,     _______, KC_F13,  _______, _______
+                       RESET  , _______, _______, _______,     _______, KC_F13,  _______, EISU
   //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
   //
   ),
@@ -108,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
      _______, KC_6,    KC_7,    KC_8,    KC_9,    KC_0,        _______, KC_QUOT, _______, _______, _______, _______,
   //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
-                       _______, _______, KC_F14 , _______,     _______, _______, _______, _______
+                       KANA2, _______, KC_F14 , _______,     _______, _______, _______, _______
   //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
   ),
   [_ADJUST] = LAYOUT( \
@@ -164,6 +182,16 @@ void matrix_init_user(void) {
   //SSD1306 OLED init, make sure to add #define SSD1306OLED in config.h
   #ifdef SSD1306OLED
     iota_gfx_init(!has_usb());   // turns on the display
+  #endif
+  uint16_t ngonkeys[] = {KC_H, KC_J};
+  uint16_t ngoffkeys[] = {KC_F, KC_G};
+  set_naginata(_NAGINATA, ngonkeys, ngoffkeys);
+  
+  #ifdef NAGINATA_EDIT_MAC
+  set_unicode_input_mode(UC_OSX);
+  #endif
+  #ifdef NAGINATA_EDIT_WIN
+  set_unicode_input_mode(UC_WINC);
   #endif
 }
 
@@ -247,8 +275,22 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         layer_off(_RAISE);
       }
       return false;
-
+    case EISU:
+      if (record->event.pressed) {
+        naginata_off();
+      }
+      return false;
+    case KANA2:
+      if (record->event.pressed) {
+        naginata_on();
+      }
+      return false;
   }
+
+  if (!process_naginata(keycode, record)) {
+    return false;
+  }
+
   return true;
 }
 
