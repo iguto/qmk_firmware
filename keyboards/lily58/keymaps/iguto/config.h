@@ -50,3 +50,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #define SPLIT_USE_TIMEOUT 5000
+
+/* 薙刀式 */
+//#define NAGINATA_TATEGAKI
+#define NAGINATA_YOKOGAKI
+// #define COMBO_COUNT 2
+

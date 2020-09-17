@@ -15,7 +15,11 @@ extern rgblight_config_t rgblight_config;
 
 extern uint8_t is_master;
 
+#include "naginata.h"
+NGKEYS naginata_keys;
+
 #define _QWERTY 0
+#define _NAGINATA 2
 #define _LOWER 5
 #define _RAISE 10
 #define _TEN_KEY 11
@@ -23,12 +27,14 @@ extern uint8_t is_master;
 #define _ADJUST 20
 
 enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
+  QWERTY = NG_SAFE_RANGE,
   LOWER,
   RAISE,
   TEN_KEY,
   MISC,
   ADJUST,
+  EISU,
+  KANA2,
 };
 
 #define LOWER MO(_LOWER)
@@ -60,6 +66,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_LCTRL, KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, \
   KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,     TEN_KEY,  KC_RBRC,  KC_N,       KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MISC, \
                              KC_LGUI, KC_LALT, LOWER, KC_SPC,   KC_ENT,   RAISE,   KC_BSPC, KC_RGUI \
+),
+ [_NAGINATA] = LAYOUT( \
+  _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______,\
+  _______, NG_Q,   NG_W,    NG_E,    NG_R,    NG_T,                         NG_Y,    NG_U,    NG_I,    NG_O,    NG_P,    _______,\
+  _______, NG_A,   NG_S,    NG_D,    NG_F,    NG_G,                         NG_H,    NG_J,    NG_K,    NG_L,    NG_SCLN, _______,\
+  _______, NG_Z,   NG_X,    NG_C,    NG_V,    NG_B,     _______,  _______,  NG_N,    NG_M,    NG_COMM, NG_DOT,  NG_SLSH, _______,\
+                             _______, _______, _______, NG_SHFT,  NG_SHFT, _______, _______, _______ \
 ),
 /* LOWER
  * ,-----------------------------------------.                    ,-----------------------------------------.
@@ -190,6 +203,9 @@ void matrix_init_user(void) {
     #ifdef RGBLIGHT_ENABLE
       RGB_current_mode = rgblight_config.mode;
     #endif
+    uint16_t ngonkeys[] = {KC_H, KC_J};
+    uint16_t ngoffkeys[] = {KC_F, KC_G};
+    set_naginata(_NAGINATA, ngonkeys, ngoffkeys);
 }
 
 //SSD1306 OLED update loop, make sure to add #define SSD1306OLED in config.h
@@ -271,6 +287,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
         break;
+    case EISU:
+      if (record->event.pressed) {
+        naginata_off();
+      }
+      return false;
+      break;
+    case KANA2:
+      if (record->event.pressed) {
+        naginata_on();
+      }
+      return false;
+      break;
+  }
+  if (!process_naginata(keycode, record)) {
+    return false;
   }
   return true;
 }
