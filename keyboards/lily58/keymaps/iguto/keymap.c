@@ -33,6 +33,7 @@ enum custom_keycodes {
   TEN_KEY,
   MISC,
   ADJUST,
+  NAGINATA,
   EISU,
   KANA2,
 };
@@ -158,11 +159,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
 [_MISC] = LAYOUT( \
-  _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______, \
-  _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______, \
-  _______, _______, _______, _______, _______, _______,                     _______, KC_PGDN, KC_PGUP, KC_UP,   _______, _______, \
-  _______, _______, _______, _______, _______, _______,  _______, _______,  _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, _______,\
-                             _______, _______, _______,  _______, _______,  _______, _______, _______ \
+  _______, _______, _______, _______, _______,  _______,                    _______, _______, _______, _______, _______, _______,\
+  _______, _______, _______, _______, _______,  _______,                    _______, _______, _______, _______, _______, _______,\
+  _______, _______, _______, _______, NAGINATA, _______,                    _______, KC_PGDN, KC_PGUP, KC_UP,   _______, _______,\
+  _______, _______, _______, _______, _______,  _______, _______, _______,  _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, _______,\
+                             _______, _______,  _______, _______, _______,  _______, _______, _______ \
 ),
 
 /* ADJUST
@@ -203,8 +204,8 @@ void matrix_init_user(void) {
     #ifdef RGBLIGHT_ENABLE
       RGB_current_mode = rgblight_config.mode;
     #endif
-    uint16_t ngonkeys[] = {KC_H, KC_J};
-    uint16_t ngoffkeys[] = {KC_F, KC_G};
+    uint16_t ngonkeys[] = {};
+    uint16_t ngoffkeys[] = {};
     set_naginata(_NAGINATA, ngonkeys, ngoffkeys);
 }
 
@@ -287,18 +288,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
         return false;
         break;
-    case EISU:
-      if (record->event.pressed) {
-        naginata_off();
-      }
-      return false;
-      break;
-    case KANA2:
-      if (record->event.pressed) {
-        naginata_on();
-      }
-      return false;
-      break;
+    case NAGINATA:
+	if (record->event.pressed) {
+	  if (naginata_state()) {
+	    naginata_off();
+	  } else {
+	    naginata_on();
+	  }
+	}
+	return false;
+	break;
+    //case EISU:
+    //  if (record->event.pressed) {
+    //    naginata_off();
+    //  }
+    //  return false;
+    //  break;
+    //case KANA2:
+    //  if (record->event.pressed) {
+    //    naginata_on();
+    //  }
+    //  return false;
+    //  break;
   }
   if (!process_naginata(keycode, record)) {
     return false;
