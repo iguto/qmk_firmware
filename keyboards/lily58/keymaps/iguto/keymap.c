@@ -8,6 +8,8 @@
   #include "ssd1306.h"
 #endif
 
+#define USB_POLLING_INTERVAL_MS 2
+
 #ifdef RGBLIGHT_ENABLE
 //Following line allows macro to read current RGB settings
 extern rgblight_config_t rgblight_config;
@@ -23,6 +25,7 @@ NGKEYS naginata_keys;
 #define _LOWER 5
 #define _RAISE 10
 #define _TEN_KEY 11
+#define _EMACS 12
 #define _MISC 15 
 #define _ADJUST 20
 
@@ -31,6 +34,7 @@ enum custom_keycodes {
   LOWER,
   RAISE,
   TEN_KEY,
+  EMACS,
   MISC,
   ADJUST,
   NAGINATA,
@@ -42,7 +46,7 @@ enum custom_keycodes {
 #define RAISE MO(_RAISE)
 #define MISC MO(_MISC)
 #define TEN_KEY TG(_TEN_KEY)
-
+#define EMACS MO(_EMACS)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -66,7 +70,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                      KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,\
   KC_LCTRL, KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                      KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, \
   KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  TEN_KEY,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MISC, \
-                             KC_LGUI, KC_LALT, LOWER, KC_SPC,   KC_ENT,   RAISE,   KC_BSPC, KC_RGUI \
+                             KC_LGUI, KC_LALT, LOWER, KC_SPC,   EMACS,    RAISE,   KC_BSPC, KC_RGUI \
 ),
  [_NAGINATA] = LAYOUT( \
   _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______,\
@@ -90,9 +94,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                   `----------------------------'           '------''--------------------'
  */
 [_LOWER] = LAYOUT( \
-  _______, _______, _______, _______, _______, _______,                   _______, _______, _______,_______, _______, _______,\
-  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                     KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12, \
-  KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,                    KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_TILD, \
+  _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,\
+  _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______,_______, _______, \
+  _______, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                      KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
   _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_UNDS, KC_PLUS, KC_LCBR, KC_RCBR, KC_PIPE, \
                              _______, _______, _______, _______, KC_F13,  _______, _______, _______\
 ),
@@ -113,8 +117,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_RAISE] = LAYOUT( \
   _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______, \
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
-  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                       _______, KC_MINS, KC_EQL, KC_LBRC, KC_RBRC,  KC_BSLS, \
+  KC_ESC , KC_EXLM, KC_AT  , KC_HASH, KC_DLR,  KC_PERC,                     KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL, \
+  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                       KC_GRV , KC_MINS, KC_EQL,  KC_LBRC, KC_RBRC,  KC_BSLS, \
   KC_LSFT, KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,   _______, _______,  KC_MINS, KC_QUOT, KC_NUBS, _______, _______, _______,\
                              _______, _______, _______,  KC_F14,  _______,  _______, _______, _______ \
 ),
@@ -143,6 +147,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                     KC_DOT, _______, _______,  KC_PENT,   _______, _______, _______, _______ \
 ),
 
+[_EMACS] = LAYOUT( \
+  _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,\
+  _______, _______, _______, KC_END , _______, _______,                   _______, _______, _______, _______, KC_UP  , _______,\
+  _______, KC_HOME, _______, KC_DEL,  KC_RGHT, KC_ESC,                    _______, _______, _______, _______, _______, _______,\
+  _______, _______, _______, _______, _______, KC_LEFT, _______, _______, KC_DOWN, _______, _______, _______, _______, _______,\
+                    _______, _______, _______, _______, _______, _______, _______, _______ \
+),
+
+
 /* MISC
  * ,-----------------------------------------.                    ,-----------------------------------------.
  * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
@@ -159,8 +172,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 
 [_MISC] = LAYOUT( \
-  _______, _______, _______, _______, _______,  _______,                    _______, _______, _______, _______, _______, _______,\
-  _______, _______, _______, _______, _______,  _______,                    _______, _______, _______, _______, _______, _______,\
+  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                       KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12, \
+  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                       KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12, \
   _______, _______, _______, _______, NAGINATA, _______,                    _______, KC_PGDN, KC_PGUP, KC_UP,   _______, _______,\
   _______, _______, _______, _______, _______,  _______, _______, _______,  _______, _______, KC_LEFT, KC_DOWN, KC_RGHT, _______,\
                              _______, _______,  _______, _______, _______,  _______, _______, _______ \
