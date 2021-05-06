@@ -65,6 +65,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
 
+
+  [_NAGINATA] = LAYOUT(
+    _______,NG_Q   ,NG_W   ,NG_E   ,NG_R   ,NG_T   ,                NG_Y   ,NG_U   ,NG_I   ,NG_O   ,NG_P   ,_______, \
+    _______,NG_A   ,NG_S   ,NG_D   ,NG_F   ,NG_G   ,                NG_H   ,NG_J   ,NG_K   ,NG_L   ,NG_SCLN,_______, \
+    _______,NG_Z   ,NG_X   ,NG_C   ,NG_V   ,NG_B   ,                NG_N   ,NG_M   ,NG_COMM,NG_DOT ,NG_SLSH,_______, \
+                    _______,_______,NG_SHFT,_______,                _______,NG_SHFT,_______,_______
+  ),
+
     [_RAISE] = LAYOUT( \
     //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
        KC_ESC,  KC_EXLM, KC_AT  , KC_HASH, KC_DLR , KC_PERC,     KC_CIRC , KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
@@ -90,9 +98,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_ADJUST] = LAYOUT( \
     //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
-       XXXXXXX, RESET, _______, _______,   EISU,    XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, XXXXXXX,
+       XXXXXXX, RESET, _______, _______,   XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, XXXXXXX,
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, NAGINATA, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX , XXXXXXX,
+       XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX , XXXXXXX,
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
        XXXXXXX , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
     //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
@@ -103,7 +111,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
        KC_F1 , KC_F2   , KC_F3  , KC_F4,   KC_F5,   KC_F6,       KC_F7,   KC_F8 ,   KC_F9,  KC_F10,  KC_F11,  KC_F12,
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-       _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, KC_PGDN , KC_PGUP, KC_UP  , KC_RGHT, XXXXXXX,
+       _______, XXXXXXX, XXXXXXX,  EISU  , NAGINATA, XXXXXXX,     XXXXXXX, KC_PGDN , KC_PGUP, KC_UP  , KC_RGHT, XXXXXXX,
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
        _______ , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, _______,
     //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
@@ -200,9 +208,6 @@ void oled_task_user(void) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (record->event.pressed) {
-        set_keylog(keycode, record);
-    }
     switch (keycode) {
         case EISU:
             if (record->event.pressed) {
@@ -216,6 +221,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
             break;
+    }
+    if (record->event.pressed) {
+        set_keylog(keycode, record);
     }
     if (!process_naginata(keycode, record)) {
         return false;
