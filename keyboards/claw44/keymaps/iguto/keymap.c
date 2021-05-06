@@ -14,7 +14,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
-// #include <stdio.h>
+#include <stdio.h>
 #include "naginata.h"
 NGKEYS naginata_keys;
 
@@ -37,6 +37,7 @@ enum layer_number {
 enum custom_keycodes {
     QWERTY = NG_SAFE_RANGE,
     NAGINATA,
+    EISU,
 };
 
 #define KC_L_SPC LT(_LOWER, KC_SPC)  // lower
@@ -89,7 +90,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_ADJUST] = LAYOUT( \
     //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
-       XXXXXXX, RESET, _______, _______,   QWERTY,    XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, XXXXXXX,
+       XXXXXXX, RESET, _______, _______,   EISU,    XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, XXXXXXX,
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, NAGINATA, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX , XXXXXXX,
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|

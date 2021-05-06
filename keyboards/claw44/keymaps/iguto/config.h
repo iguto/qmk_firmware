@@ -24,6 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define OLED_UPDATE_INTERVAL 100
 #define OLED_TIMEOUT 600000
 
-#define NAGINATA_TATEGAKI
+#define NAGINATA_YOKOGAKI
 #define NAGINATA_EDIT_WIN // JP106
 
