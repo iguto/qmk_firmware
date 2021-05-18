@@ -23,6 +23,7 @@ NGKEYS naginata_keys;
 #define _LOWER 5
 #define _RAISE 10
 #define _TEN_KEY 11
+#define _EMACS 12
 #define _MISC 15 
 #define _ADJUST 20
 
@@ -39,12 +40,14 @@ enum custom_keycodes {
   KANA2,
   IMEON,
   IMEOFF,
+  EMACS,
 };
 
 #define LOWER MO(_LOWER)
 #define RAISE MO(_RAISE)
 #define MISC MO(_MISC)
 #define TEN_KEY TG(_TEN_KEY)
+#define EMACS MO(_EMACS)
 #define MACCMD CMD_T(KC_SPC)
 
 
@@ -70,7 +73,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   KC_TAB,   KC_Q,   KC_W,    KC_E,    KC_R,    KC_T,                      KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSPC,\
   KC_LCTRL, KC_A,   KC_S,    KC_D,    KC_F,    KC_G,                      KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT, \
   KC_LSFT,  KC_Z,   KC_X,    KC_C,    KC_V,    KC_B,  TEN_KEY,  KC_RBRC,  KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, MISC, \
-                             KC_LGUI, KC_LALT, LOWER, KC_SPC,   KC_ENT,   RAISE,   KC_BSPC, KC_RGUI \
+                             KC_LGUI, KC_LALT, LOWER, KC_SPC,   EMACS ,   RAISE,   KC_BSPC, KC_RGUI \
 ),
  [_NAGINATA] = LAYOUT( \
   _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______,\
@@ -117,7 +120,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 [_RAISE] = LAYOUT( \
   _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, _______, _______, \
-  KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
+  KC_GRV,  KC_EXLM, KC_2,    KC_3,    KC_4,    KC_5,                        KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_DEL, \
   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,                       _______, KC_MINS, KC_EQL, KC_LBRC, KC_RBRC,  KC_BSLS, \
   KC_LSFT, KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,   _______, _______,  KC_MINS, KC_QUOT, KC_NUBS, _______, _______, _______,\
                              _______, _______, _______,  IMEON,  _______,  _______, _______, _______ \
@@ -145,6 +148,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   _______, XXXXXXX,  KC_4,    KC_5,    KC_6,   S(KC_EQL),                   _______, KC_MINS, KC_EQL, KC_LBRC, KC_RBRC,  KC_BSLS, \
   _______, XXXXXXX,  KC_1,    KC_2,    KC_3,    KC_0,     _______, _______, KC_MINS, KC_QUOT, KC_NUBS, _______, _______, _______,\
                     KC_DOT, _______, _______,  KC_PENT,   _______, _______, _______, _______ \
+),
+
+[_EMACS] = LAYOUT( \
+  _______, _______, _______, _______, _______, _______,                     _______, _______, _______, _______, KC_UP  , _______, \
+  _______, _______, _______, KC_END , _______, _______,                     _______, _______, _______, _______, _______, _______, \
+  _______, KC_HOME, _______, KC_DEL , KC_RGHT, KC_ESC ,                     _______, _______, _______, _______, _______, _______, \
+  _______, _______, _______, _______, _______, KC_LEFT,   _______, _______, KC_DOWN, _______, _______, _______, _______, _______,\
+                    _______, _______, _______, _______,   _______, _______, _______, _______ \
 ),
 
 /* MISC
@@ -234,6 +245,8 @@ const char *read_keylogs(void);
 // void set_timelog(void);
 // const char *read_timelog(void);
 
+
+/****** old oled setting 
 void oled_task_user(void) {
   if (is_keyboard_master()) {
     // If you want to change the display of OLED, you need to change here
@@ -247,15 +260,41 @@ void oled_task_user(void) {
     oled_write(read_logo(), false);
   }
 }
+******/
+
+void oled_task_user(void) {
+  oled_write_P(PSTR("Layer: "), false);
+
+  switch (get_highest_layer(layer_state)) {
+    case _QWERTY:
+      oled_write_P(PSTR("Default\n"), false);
+      break;
+    case _LOWER:
+      oled_write_P(PSTR("Lower\n"), false);
+      break;
+    case _RAISE:
+      oled_write_P(PSTR("Raise\n"), false);
+      break;
+    case _ADJUST:
+      oled_write_P(PSTR("Adjust\n"), false);
+      break;
+    case _MISC:
+      oled_write_P(PSTR("Misc\n"), false);
+      break;
+    case _NAGINATA:
+      oled_write_P(PSTR("NAGINATA\n"), false);
+      break;
+    default:
+      oled_write_ln_P(PSTR("undefined"), false);
+  }
+}
+
 #endif//SSD1306OLED
 
 bool is_mac = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   if (record->event.pressed) {
-#ifdef OLED_DRIVER_ENABLE
-    set_keylog(keycode, record);
-#endif
     // set_timelog();
   }
 
