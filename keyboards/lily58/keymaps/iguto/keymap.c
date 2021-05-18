@@ -43,7 +43,6 @@ enum custom_keycodes {
   KANA2,
   IMEON,
   IMEOFF,
-  EMACS,
 };
 
 #define LOWER MO(_LOWER)
