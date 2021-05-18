@@ -1,6 +1,4 @@
+OLED_DRIVER_ENABLE = yes
 UNICODE_ENABLE = yes
-SRC += \
-       ./layer_state_reader.c \
-       ../../lib/logo_reader.c \
-       naginata_v12.c
-
+SRC +=    ./naginata_v13u.c
+EXTRAFLAGS += -flto

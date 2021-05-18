@@ -8,6 +8,8 @@
   #include "ssd1306.h"
 #endif
 
+#define USB_POLLING_INTERVAL_MS 2
+
 #ifdef RGBLIGHT_ENABLE
 //Following line allows macro to read current RGB settings
 extern rgblight_config_t rgblight_config;
@@ -33,6 +35,7 @@ enum custom_keycodes {
   LOWER,
   RAISE,
   TEN_KEY,
+  EMACS,
   MISC,
   ADJUST,
   NAGINATA,
@@ -49,7 +52,6 @@ enum custom_keycodes {
 #define TEN_KEY TG(_TEN_KEY)
 #define EMACS MO(_EMACS)
 #define MACCMD CMD_T(KC_SPC)
-
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
