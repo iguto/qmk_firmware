@@ -15,6 +15,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 #include <stdio.h>
+#include "keymap_jp.h"
 #include "naginata.h"
 NGKEYS naginata_keys;
 
@@ -25,8 +26,10 @@ NGKEYS naginata_keys;
 
 enum layer_number {
     _QWERTY = 0,
+    _JP,
     _NAGINATA,
     _RAISE,
+    _RAISE_JP,
     _LOWER,
     _ADJUST,
     _MISC,
@@ -38,6 +41,13 @@ enum custom_keycodes {
     QWERTY = NG_SAFE_RANGE,
     NAGINATA,
     EISU,
+    RAISE,
+    JU_GRV,
+    JU_MINS,
+    JU_EQL,
+    JU_BSLS,
+    JU_SCLN,
+    JU_QUOT,
 };
 
 #define KC_L_SPC LT(_LOWER, KC_SPC)  // lower
@@ -45,12 +55,13 @@ enum custom_keycodes {
 #define KC_G_JA LGUI_T(KC_LANG1)     // cmd or win
 #define KC_G_EN LGUI_T(KC_LANG2)     // cmd or win
 #define KC_C_BS LCTL_T(KC_BSPC)      // ctrl
-#define KC_A_DEL ALT_T(KC_DEL)       // alt
+//#define KC_A_DEL ALT_T(KC_DEL)       // alt
 
-#define RAISE MO(_RAISE)
+//#define RAISE MO(_RAISE)
 #define LOWER MO(_LOWER)
 #define MISC  MO(_MISC)
 #define EMACS MO(_EMACS)
+#define JP    TG(_JP)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT( \
@@ -65,6 +76,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
 
+    [_JP] = LAYOUT( \
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+       KC_TAB , KC_Q   , KC_W    , KC_E   , KC_R    , KC_T   ,     KC_Y   , KC_U    , KC_I   , KC_O    , KC_P   , KC_BSPC,
+    //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
+       KC_LCTL , KC_A   , KC_S    , KC_D   , KC_F    , KC_G   ,     KC_H   , KC_J    , KC_K   , KC_L   , JU_SCLN, KC_ENT,
+    //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
+       KC_LSFT, KC_Z   , KC_X    , KC_C   , KC_V    , KC_B   ,     KC_N   , KC_M    , KC_COMM, KC_DOT  , KC_SLSH, MISC,
+    //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
+                         KC_LALT,  LOWER,   KC_SPC,   KC_LSFT,     KC_RCTL, EMACS,   RAISE,    KC_LGUI
+    //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
+    ),
 
   [_NAGINATA] = LAYOUT(
     _______,NG_Q   ,NG_W   ,NG_E   ,NG_R   ,NG_T   ,                NG_Y   ,NG_U   ,NG_I   ,NG_O   ,NG_P   ,_______, \
@@ -84,6 +106,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                          _______, _______, KC_F14,  _______,     _______, _______, _______, _______
     //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
     ),
+    [_RAISE_JP] = LAYOUT( \
+    //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
+       KC_ESC,  JP_EXLM, JP_AT  , JP_HASH, JP_DLR , JP_PERC,     JP_CIRC , JP_AMPR, JP_ASTR, JP_LPRN, JP_RPRN, KC_DEL,
+    //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
+       _______, _______, _______, _______, _______, _______,     KC_GRV,  JU_MINS,  JU_EQL, JP_LBRC, JP_RBRC, JU_BSLS,
+    //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
+       _______, _______, _______, _______, _______, _______,     _______, JU_QUOT, _______, _______, _______, _______,
+    //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
+                         _______, _______, KC_F14,  _______,     _______, _______, _______, _______
+    //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
+    ),
 
     [_LOWER] = LAYOUT( \
     //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
@@ -98,7 +131,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_ADJUST] = LAYOUT( \
     //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
-       XXXXXXX, RESET, _______, _______,   XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, XXXXXXX,
+       XXXXXXX, RESET, _______, _______,   XXXXXXX, XXXXXXX,          XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_PSCR, XXXXXXX,
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX , XXXXXXX,
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
@@ -113,7 +146,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
        _______, XXXXXXX, XXXXXXX,  EISU  , NAGINATA, XXXXXXX,     XXXXXXX, KC_PGDN , KC_PGUP, KC_UP  , KC_RGHT, XXXXXXX,
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-       _______ , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,     XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, _______,
+       _______ , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, JP,     XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, _______,
     //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
                          _______ , _______, _______, _______,     _______, _______, _______, _______
     //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
@@ -142,20 +175,30 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 }
 
 #ifdef OLED_DRIVER_ENABLE
-
+oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    if (!is_keyboard_master()) return OLED_ROTATION_180;
+    return rotation;
+}
 void render_layer_state(void) {
     switch (get_highest_layer(layer_state)) {
         case _QWERTY:
             oled_write_ln_P(PSTR("Layer: Default"), false);
             break;
+        case _JP:
+            oled_write_ln_P(PSTR("Layer: JP_Default"), false);
+            break;
         case _RAISE:
             oled_write_ln_P(PSTR("Layer: Raise"), false);
+            break;
+        case _RAISE_JP:
+            oled_write_ln_P(PSTR("Layer: RaiseJP"), false);
             break;
         case _LOWER:
             oled_write_ln_P(PSTR("Layer: Lower"), false);
             break;
         case _ADJUST:
             oled_write_ln_P(PSTR("Layer: Adjust"), false);
+            break;
         case _MISC:
             oled_write_ln_P(PSTR("Layer: Misc"), false);
             break;
@@ -179,9 +222,9 @@ char keylog_str[24]  = {};
 char keylogs_str[21] = {};
 int  keylogs_str_idx = 0;
 
-const char code_to_name[60] = {' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'R', 'E', 'B', 'T', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ';', '\'', ' ', ',', '.', '/', ' ', ' ', ' '};
+//const char code_to_name[60] = {' ', ' ', ' ', ' ', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'R', 'E', 'B', 'T', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ';', '\'', ' ', ',', '.', '/', ' ', ' ', ' '};
 
-void set_keylog(uint16_t keycode, keyrecord_t *record) {
+/*void set_keylog(uint16_t keycode, keyrecord_t *record) {
     char name = ' ';
     if (keycode < 60) {
         name = code_to_name[keycode];
@@ -200,7 +243,7 @@ void set_keylog(uint16_t keycode, keyrecord_t *record) {
 
     keylogs_str[keylogs_str_idx] = name;
     keylogs_str_idx++;
-}
+}*/
 
 const char *read_keylog(void) { return keylog_str; }
 const char *read_keylogs(void) { return keylogs_str; }
@@ -214,34 +257,162 @@ void oled_task_user(void) {
         render_logo();
     }
 }
+#endif
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        case EISU:
-            if (record->event.pressed) {
-                naginata_off();
-            }
-            return false;
-            break;
-        case NAGINATA:
-            if (record->event.pressed) {
-                naginata_on();
-            }
-            return false;
-            break;
-    }
-    if (record->event.pressed) {
-        set_keylog(keycode, record);
-    }
-    if (!process_naginata(keycode, record)) {
-        return false;
-    }
-    return true;
+  static bool lshift = false;
+  static bool rshift = false;
+  switch (keycode) {
+    case EISU:
+      if (record->event.pressed) {
+        naginata_off();
+      }
+      return false;
+      break;
+    case NAGINATA:
+      if (record->event.pressed) {
+        naginata_on();
+      }
+      return false;
+      break;
+    case RAISE:
+      if (record->event.pressed) {
+        if (get_highest_layer(layer_state) == _JP) {
+          layer_on(_RAISE_JP);
+        } else {
+          layer_on(_RAISE);
+        }
+      } else {
+        layer_off(_RAISE_JP);
+        layer_off(_RAISE);
+      }
+      break;
+    case JU_GRV:
+      if (record->event.pressed) {
+        lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
+        rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
+        if (lshift || rshift) {
+          if (lshift) unregister_code(KC_LSFT);
+          if (rshift) unregister_code(KC_RSFT);
+          register_code(KC_LSFT);
+          register_code(KC_LBRC);
+          unregister_code(KC_LBRC);
+          unregister_code(KC_LSFT);
+          if (lshift) register_code(KC_LSFT);
+          if (rshift) register_code(KC_RSFT);
+        } else {
+          register_code(KC_LSFT);
+          register_code(KC_EQL);
+          unregister_code(KC_EQL);
+          unregister_code(KC_LSFT);
+        }  
+      }
+      break;
+    case JU_MINS:
+      if (record->event.pressed) {
+        lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
+        rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
+        if (lshift || rshift) {
+          if (lshift) unregister_code(KC_LSFT);
+          if (rshift) unregister_code(KC_RSFT);
+          register_code(KC_LSFT);
+          register_code(KC_INT1);
+          unregister_code(KC_INT1);
+          unregister_code(KC_LSFT);
+          if (lshift) register_code(KC_LSFT);
+          if (rshift) register_code(KC_RSFT);
+        } else {
+          register_code(KC_MINS);
+          unregister_code(KC_MINS);
+        }
+      }
+      break;
+    case JU_EQL:
+      if (record->event.pressed) {
+        lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
+        rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
+        if (lshift || rshift) {
+          if (lshift) unregister_code(KC_LSFT);
+          if (lshift) unregister_code(KC_RSFT);
+          register_code(KC_LSFT);
+          register_code(KC_SCLN);
+          unregister_code(KC_SCLN);
+          unregister_code(KC_LSFT);
+          if (lshift) register_code(KC_LSFT);
+          if (rshift) register_code(KC_RSFT);
+        } else {
+          register_code(KC_LSFT);
+          register_code(KC_MINS);
+          unregister_code(KC_MINS);
+          unregister_code(KC_LSFT);
+        }
+      }
+      break;
+     case JU_BSLS:
+      if (record->event.pressed) {
+        lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
+        rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
+        if (lshift || rshift) {
+          if (lshift) unregister_code(KC_LSFT);
+          if (rshift) unregister_code(KC_RSFT);
+          register_code(KC_LSFT);
+          register_code(KC_INT3);
+          unregister_code(KC_INT3);
+          unregister_code(KC_LSFT);
+          if (lshift) register_code(KC_LSFT);
+          if (rshift) register_code(KC_RSFT);
+        } else {
+          register_code(KC_INT3);
+          unregister_code(KC_INT3);
+        }
+      }
+      break;
+    case JU_SCLN:
+      if (record->event.pressed) {
+        lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
+        rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
+        if (lshift || rshift) {
+          if (lshift) unregister_code(KC_LSFT);
+          if (rshift) unregister_code(KC_RSFT);
+          //register_code(KC_LSFT);
+          register_code(KC_QUOT);
+          unregister_code(KC_QUOT);
+          //unregister_code(KC_LSFT);
+          if (lshift) register_code(KC_LSFT);
+          if (rshift) register_code(KC_RSFT);
+        } else {
+          register_code(KC_SCLN);
+          unregister_code(KC_SCLN);
+        }
+      }
+      break;
+    case JU_QUOT:
+      if (record->event.pressed) {
+        lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
+        rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
+        if (lshift || rshift) {
+          if (lshift) unregister_code(KC_LSFT);
+          if (rshift) unregister_code(KC_RSFT);
+          register_code(KC_LSFT);
+          register_code(KC_2);
+          unregister_code(KC_2);
+          unregister_code(KC_LSFT);
+          if (lshift) register_code(KC_LSFT);
+          if (rshift) register_code(KC_RSFT);
+        } else {
+          register_code(KC_LSFT);
+          register_code(KC_7);
+          unregister_code(KC_7);
+          unregister_code(KC_LSFT);
+        }
+      }
+      break;
+  }
+  if (!process_naginata(keycode, record)) {
+    return false;
+  }
+  return true;
 }
 
-oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (!is_keyboard_master()) return OLED_ROTATION_180;
-    return rotation;
-}
 
-#endif
+

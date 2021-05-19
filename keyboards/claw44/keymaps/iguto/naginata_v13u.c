@@ -584,6 +584,10 @@ void set_naginata(uint8_t layer, uint16_t *onk, uint16_t *offk) {
   ngoff_keys[1] = *(offk+1);
 
   naginata_config.raw = eeconfig_read_user();
+  naginata_config.tategaki = 0;
+#ifdef NAGINATA_TATEGAKI
+  naginata_config.tategaki = 1;
+#endif
   if (naginata_config.os != NG_WIN && naginata_config.os != NG_MAC && naginata_config.os != NG_LINUX) {
     naginata_config.os = NG_WIN;
     naginata_config.live_conv = 1;
