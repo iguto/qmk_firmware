@@ -295,15 +295,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           if (lshift) unregister_code(KC_LSFT);
           if (rshift) unregister_code(KC_RSFT);
           register_code(KC_LSFT);
-          register_code(KC_LBRC);
-          unregister_code(KC_LBRC);
+          register_code(KC_MINS);
+          unregister_code(KC_MINS);
           unregister_code(KC_LSFT);
           if (lshift) register_code(KC_LSFT);
           if (rshift) register_code(KC_RSFT);
         } else {
           register_code(KC_LSFT);
-          register_code(KC_EQL);
-          unregister_code(KC_EQL);
+          register_code(KC_LBRC);
+          unregister_code(KC_LBRC);
           unregister_code(KC_LSFT);
         }  
       }
@@ -387,26 +387,33 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       }
       break;
     case JU_QUOT:
+      lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
+      rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
       if (record->event.pressed) {
-        lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
-        rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
         if (lshift || rshift) {
-          if (lshift) unregister_code(KC_LSFT);
-          if (rshift) unregister_code(KC_RSFT);
-          register_code(KC_LSFT);
+          //if (lshift) unregister_code(KC_LSFT);
+          //if (rshift) unregister_code(KC_RSFT);
+          //register_code(KC_LSFT);
           register_code(KC_2);
-          unregister_code(KC_2);
-          unregister_code(KC_LSFT);
-          if (lshift) register_code(KC_LSFT);
-          if (rshift) register_code(KC_RSFT);
+          //unregister_code(KC_2);
+          //unregister_code(KC_LSFT);
+          //if (lshift) register_code(KC_LSFT);
+          //if (rshift) register_code(KC_RSFT);
+          return false;
         } else {
           register_code(KC_LSFT);
           register_code(KC_7);
-          unregister_code(KC_7);
-          unregister_code(KC_LSFT);
-        }
+          //unregister_code(KC_7);
+          //unregister_code(KC_LSFT);
+          return false;
+        } 
+      } else {
+        unregister_code(KC_LSFT);
+        unregister_code(KC_7);
+        unregister_code(KC_2);
       }
-      break;
+
+      //return false;
   }
   if (!process_naginata(keycode, record)) {
     return false;
