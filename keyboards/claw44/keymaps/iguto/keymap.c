@@ -25,10 +25,10 @@ NGKEYS naginata_keys;
 // entirely and just use numbers.
 
 enum layer_number {
-    _QWERTY = 0,
-    _JP,
+    _QWERTY_JP = 0,
+    _QWERTY_US,
     _NAGINATA,
-    _RAISE,
+    _RAISE_US,
     _RAISE_JP,
     _LOWER,
     _ADJUST,
@@ -61,10 +61,21 @@ enum custom_keycodes {
 #define LOWER MO(_LOWER)
 #define MISC  MO(_MISC)
 #define EMACS MO(_EMACS)
-#define JP    TG(_JP)
+#define US    TG(_QWERTY_US)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [_QWERTY] = LAYOUT( \
+    [_QWERTY_JP] = LAYOUT( \
+    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
+       KC_TAB , KC_Q   , KC_W    , KC_E   , KC_R    , KC_T   ,     KC_Y   , KC_U    , KC_I   , KC_O    , KC_P   , KC_BSPC,
+    //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
+       KC_LCTL , KC_A   , KC_S    , KC_D   , KC_F    , KC_G   ,     KC_H   , KC_J    , KC_K   , KC_L   , JU_SCLN, KC_ENT,
+    //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
+       KC_LSFT, KC_Z   , KC_X    , KC_C   , KC_V    , KC_B   ,     KC_N   , KC_M    , KC_COMM, KC_DOT  , KC_SLSH, MISC,
+    //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
+                         KC_LALT,  LOWER,   KC_SPC,   KC_LSFT,     KC_RCTL, EMACS,   RAISE,    KC_LGUI
+    //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
+    ),
+    [_QWERTY_US] = LAYOUT( \
     //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
        KC_TAB , KC_Q   , KC_W    , KC_E   , KC_R    , KC_T   ,     KC_Y   , KC_U    , KC_I   , KC_O    , KC_P   , KC_BSPC,
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
@@ -76,17 +87,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
 
-    [_JP] = LAYOUT( \
-    //,--------+--------+---------+--------+---------+--------.   ,--------+---------+--------+---------+--------+--------.
-       KC_TAB , KC_Q   , KC_W    , KC_E   , KC_R    , KC_T   ,     KC_Y   , KC_U    , KC_I   , KC_O    , KC_P   , KC_BSPC,
-    //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
-       KC_LCTL , KC_A   , KC_S    , KC_D   , KC_F    , KC_G   ,     KC_H   , KC_J    , KC_K   , KC_L   , JU_SCLN, KC_ENT,
-    //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
-       KC_LSFT, KC_Z   , KC_X    , KC_C   , KC_V    , KC_B   ,     KC_N   , KC_M    , KC_COMM, KC_DOT  , KC_SLSH, MISC,
-    //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
-                         KC_LALT,  LOWER,   KC_SPC,   KC_LSFT,     KC_RCTL, EMACS,   RAISE,    KC_LGUI
-    //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
-    ),
 
   [_NAGINATA] = LAYOUT(
     _______,NG_Q   ,NG_W   ,NG_E   ,NG_R   ,NG_T   ,                NG_Y   ,NG_U   ,NG_I   ,NG_O   ,NG_P   ,_______, \
@@ -95,17 +95,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                     _______,NG_SHFT, LOWER, _______,                EMACS, RAISE,NG_SHFT, _______
   ),
 
-    [_RAISE] = LAYOUT( \
-    //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
-       KC_ESC,  KC_EXLM, KC_AT  , KC_HASH, KC_DLR , KC_PERC,     KC_CIRC , KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
-    //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-       _______, _______, _______, _______, _______, _______,     KC_GRV,  KC_MINS,  KC_EQL, KC_LBRC, KC_RBRC, KC_BSLS,
-    //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-       _______, _______, _______, _______, _______, _______,     _______, KC_QUOT, _______, _______, _______, _______,
-    //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
-                         _______, _______, KC_F14,  _______,     _______, _______, _______, _______
-    //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
-    ),
     [_RAISE_JP] = LAYOUT( \
     //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
        KC_ESC,  JP_EXLM, JP_AT  , JP_HASH, JP_DLR , JP_PERC,     JP_CIRC , JP_AMPR, JP_ASTR, JP_LPRN, JP_RPRN, KC_DEL,
@@ -113,6 +102,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______, _______, _______, _______, _______, _______,     KC_GRV,  JU_MINS,  JU_EQL, JP_LBRC, JP_RBRC, JU_BSLS,
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
        _______, _______, _______, _______, _______, _______,     _______, JU_QUOT, _______, _______, _______, _______,
+    //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
+                         _______, _______, KC_F14,  _______,     _______, _______, _______, _______
+    //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
+    ),
+    [_RAISE_US] = LAYOUT( \
+    //,--------+--------+--------+--------+--------+--------.   ,--------+--------+--------+--------+--------+--------.
+       KC_ESC,  KC_EXLM, KC_AT  , KC_HASH, KC_DLR , KC_PERC,     KC_CIRC , KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_DEL,
+    //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
+       _______, _______, _______, _______, _______, _______,     KC_GRV,  KC_MINS,  KC_EQL, KC_LBRC, KC_RBRC, KC_BSLS,
+    //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
+       _______, _______, _______, _______, _______, _______,     _______, KC_QUOT, _______, _______, _______, _______,
     //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
                          _______, _______, KC_F14,  _______,     _______, _______, _______, _______
     //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
@@ -146,7 +146,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
        _______, XXXXXXX, XXXXXXX,  EISU  , NAGINATA, XXXXXXX,     XXXXXXX, KC_PGDN , KC_PGUP, KC_UP  , KC_RGHT, XXXXXXX,
     //|--------+--------+--------+--------+--------+--------|   |--------+--------+--------+--------+--------+--------|
-       _______ , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, JP,     XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, _______,
+       _______ , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, US,         XXXXXXX, XXXXXXX, KC_LEFT, KC_DOWN, KC_RGHT, _______,
     //`--------+--------+--------+--------+--------+--------/   \--------+--------+--------+--------+--------+--------'
                          _______ , _______, _______, _______,     _______, _______, _______, _______
     //                  `--------+--------+--------+--------'   `--------+--------+--------+--------'
@@ -171,7 +171,8 @@ void matrix_init_user(void) {
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
-  return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
+  state = update_tri_layer_state(state, _LOWER, _RAISE_JP, _ADJUST);
+  return  update_tri_layer_state(state, _LOWER, _RAISE_JP, _ADJUST);
 }
 
 #ifdef OLED_DRIVER_ENABLE
@@ -181,17 +182,17 @@ oled_rotation_t oled_init_user(oled_rotation_t rotation) {
 }
 void render_layer_state(void) {
     switch (get_highest_layer(layer_state)) {
-        case _QWERTY:
+        case _QWERTY_JP:
             oled_write_ln_P(PSTR("Layer: Default"), false);
             break;
-        case _JP:
-            oled_write_ln_P(PSTR("Layer: JP_Default"), false);
-            break;
-        case _RAISE:
-            oled_write_ln_P(PSTR("Layer: Raise"), false);
+        case _QWERTY_US:
+            oled_write_ln_P(PSTR("Layer: Default_US"), false);
             break;
         case _RAISE_JP:
-            oled_write_ln_P(PSTR("Layer: RaiseJP"), false);
+            oled_write_ln_P(PSTR("Layer: Raise"), false);
+            break;
+        case _RAISE_US:
+            oled_write_ln_P(PSTR("Layer: Raise_US"), false);
             break;
         case _LOWER:
             oled_write_ln_P(PSTR("Layer: Lower"), false);
@@ -260,8 +261,6 @@ void oled_task_user(void) {
 #endif
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  static bool lshift = false;
-  static bool rshift = false;
   switch (keycode) {
     case EISU:
       if (record->event.pressed) {
@@ -277,143 +276,98 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       break;
     case RAISE:
       if (record->event.pressed) {
-        if (get_highest_layer(layer_state) == _JP) {
+        if (get_highest_layer(layer_state) == _QWERTY_JP) {
           layer_on(_RAISE_JP);
         } else {
-          layer_on(_RAISE);
+          layer_on(_RAISE_US);
         }
       } else {
         layer_off(_RAISE_JP);
-        layer_off(_RAISE);
+        layer_off(_RAISE_US);
       }
       break;
     case JU_GRV:
       if (record->event.pressed) {
-        lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
-        rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
-        if (lshift || rshift) {
-          if (lshift) unregister_code(KC_LSFT);
-          if (rshift) unregister_code(KC_RSFT);
-          register_code(KC_LSFT);
-          register_code(KC_MINS);
-          unregister_code(KC_MINS);
-          unregister_code(KC_LSFT);
-          if (lshift) register_code(KC_LSFT);
-          if (rshift) register_code(KC_RSFT);
+        if (get_mods() & MOD_MASK_SHIFT) {
+          //register_code(KC_EQL);
+          register_code16(JP_GRV);
         } else {
-          register_code(KC_LSFT);
-          register_code(KC_LBRC);
-          unregister_code(KC_LBRC);
-          unregister_code(KC_LSFT);
+          //register_mods(MOD_MASK_SHIFT);
+          register_code16(JP_TILD);
+          //register_code(KC_LBRC);
         }  
+      } else {
+          //unregister_mods(MOD_MASK_SHIFT);
+          //unregister_code(KC_EQL);
+          //unregister_code(KC_LBRC);
+          unregister_code16(JP_GRV);
+          unregister_code16(JP_TILD);
       }
-      break;
+      return false;
     case JU_MINS:
       if (record->event.pressed) {
-        lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
-        rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
-        if (lshift || rshift) {
-          if (lshift) unregister_code(KC_LSFT);
-          if (rshift) unregister_code(KC_RSFT);
-          register_code(KC_LSFT);
+        if (get_mods() & MOD_MASK_SHIFT) {
           register_code(KC_INT1);
-          unregister_code(KC_INT1);
-          unregister_code(KC_LSFT);
-          if (lshift) register_code(KC_LSFT);
-          if (rshift) register_code(KC_RSFT);
         } else {
           register_code(KC_MINS);
-          unregister_code(KC_MINS);
         }
+      } else {
+        unregister_code(KC_INT1);
+        unregister_code(KC_MINS);
       }
-      break;
+      return false;
     case JU_EQL:
       if (record->event.pressed) {
-        lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
-        rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
-        if (lshift || rshift) {
-          if (lshift) unregister_code(KC_LSFT);
-          if (lshift) unregister_code(KC_RSFT);
-          register_code(KC_LSFT);
+        if (get_mods() & MOD_MASK_SHIFT) {
           register_code(KC_SCLN);
-          unregister_code(KC_SCLN);
-          unregister_code(KC_LSFT);
-          if (lshift) register_code(KC_LSFT);
-          if (rshift) register_code(KC_RSFT);
         } else {
-          register_code(KC_LSFT);
+          register_mods(MOD_MASK_SHIFT);
           register_code(KC_MINS);
-          unregister_code(KC_MINS);
-          unregister_code(KC_LSFT);
         }
+      } else {
+        unregister_mods(MOD_MASK_SHIFT);
+        unregister_code(KC_MINS);
       }
-      break;
-     case JU_BSLS:
+      return false;
+    case JU_BSLS:
       if (record->event.pressed) {
-        lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
-        rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
-        if (lshift || rshift) {
-          if (lshift) unregister_code(KC_LSFT);
-          if (rshift) unregister_code(KC_RSFT);
-          register_code(KC_LSFT);
+        if (get_mods() & MOD_MASK_SHIFT) {
           register_code(KC_INT3);
-          unregister_code(KC_INT3);
-          unregister_code(KC_LSFT);
-          if (lshift) register_code(KC_LSFT);
-          if (rshift) register_code(KC_RSFT);
         } else {
           register_code(KC_INT3);
-          unregister_code(KC_INT3);
         }
+      } else {
+        unregister_code(KC_INT3);
       }
-      break;
+      return false;
     case JU_SCLN:
       if (record->event.pressed) {
-        lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
-        rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
-        if (lshift || rshift) {
-          if (lshift) unregister_code(KC_LSFT);
-          if (rshift) unregister_code(KC_RSFT);
-          //register_code(KC_LSFT);
+        if (get_mods() & MOD_MASK_SHIFT) {
+          unregister_mods(MOD_MASK_SHIFT);
           register_code(KC_QUOT);
-          unregister_code(KC_QUOT);
-          //unregister_code(KC_LSFT);
-          if (lshift) register_code(KC_LSFT);
-          if (rshift) register_code(KC_RSFT);
         } else {
           register_code(KC_SCLN);
-          unregister_code(KC_SCLN);
-        }
+        } 
+      } else {
+        unregister_code(KC_QUOT);
+        unregister_code(KC_SCLN);
+        unregister_code(KC_LSFT);
       }
-      break;
+      return false;
     case JU_QUOT:
-      lshift = keyboard_report->mods & MOD_BIT(KC_LSFT);
-      rshift = keyboard_report->mods & MOD_BIT(KC_RSFT);
       if (record->event.pressed) {
-        if (lshift || rshift) {
-          //if (lshift) unregister_code(KC_LSFT);
-          //if (rshift) unregister_code(KC_RSFT);
-          //register_code(KC_LSFT);
+        if (get_mods() & MOD_MASK_SHIFT) {
           register_code(KC_2);
-          //unregister_code(KC_2);
-          //unregister_code(KC_LSFT);
-          //if (lshift) register_code(KC_LSFT);
-          //if (rshift) register_code(KC_RSFT);
-          return false;
         } else {
           register_code(KC_LSFT);
           register_code(KC_7);
-          //unregister_code(KC_7);
-          //unregister_code(KC_LSFT);
-          return false;
-        } 
+        }
       } else {
         unregister_code(KC_LSFT);
         unregister_code(KC_7);
         unregister_code(KC_2);
       }
-
-      //return false;
+      return false;
   }
   if (!process_naginata(keycode, record)) {
     return false;
