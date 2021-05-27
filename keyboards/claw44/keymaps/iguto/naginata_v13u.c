@@ -772,7 +772,7 @@ void ng_send_unicode_string(const char *str) {
     case NG_WIN:
     case NG_MAC:
       send_unicode_string(str);
-      tap_code(KC_ENT);
+      //tap_code(KC_ENT);
       break;
   }
 }
