@@ -72,7 +72,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
        KC_LSFT, KC_Z   , KC_X    , KC_C   , KC_V    , KC_B   ,     KC_N   , KC_M    , KC_COMM, KC_DOT  , KC_SLSH, MISC,
     //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
-                         KC_LALT,  LOWER,   KC_SPC,   KC_LSFT,     KC_RCTL, EMACS,   RAISE,    KC_LGUI
+                         KC_LALT,  LOWER,   KC_SPC,   KC_LSFT,     KC_LGUI, EMACS,   RAISE,    EMACS
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
     [_QWERTY_US] = LAYOUT( \
@@ -83,7 +83,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     //|--------+--------+---------+--------+---------+--------|   |--------+---------+--------+---------+--------+--------|
        KC_LSFT, KC_Z   , KC_X    , KC_C   , KC_V    , KC_B   ,     KC_N   , KC_M    , KC_COMM, KC_DOT  , KC_SLSH, MISC,
     //`--------+--------+---------+--------+---------+--------/   \--------+---------+--------+---------+--------+--------'
-                         KC_LALT,  LOWER,   KC_SPC,   KC_LSFT,     KC_RCTL, EMACS,   RAISE,    KC_LGUI
+                         KC_LALT,  LOWER,   KC_SPC,   KC_LSFT,     KC_LGUI, EMACS,   RAISE,    EMACS
     //                 `----------+--------+---------+--------'   `--------+---------+--------+---------'
     ),
 
@@ -327,6 +327,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       } else {
         unregister_mods(MOD_MASK_SHIFT);
         unregister_code(KC_MINS);
+        unregister_code(KC_SCLN);
       }
       return false;
     case JU_BSLS:
